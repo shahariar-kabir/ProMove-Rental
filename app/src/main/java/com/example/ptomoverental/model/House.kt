@@ -1,0 +1,17 @@
+package com.example.ptomoverental.model
+
+import java.io.Serializable
+
+data class House(
+    val id: String = "",
+    val title: String = "",
+    val location: String = "",
+    val price: String = "",
+    val bedrooms: Int = 0,
+    val bathrooms: Int = 0,
+    val area: String = "",
+    val description: String = "",
+    val imageUrl: String = "",
+    val ownerId: String = "",
+    val type: String = "Apartment" // e.g., Apartment, House, Room
+) : Serializable

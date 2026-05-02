@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_finder_dashboard"
+        android:icon="@drawable/ic_home"
+        android:title="@string/nav_dashboard" />
+    <item
+        android:id="@+id/nav_finder_search"
+        android:icon="@drawable/ic_search"
+        android:title="@string/nav_search" />
+    <item
+        android:id="@+id/nav_finder_bookings"
+        android:icon="@drawable/ic_check_circle"
+        android:title="@string/nav_bookings" />
+    <item
+        android:id="@+id/nav_finder_profile"
+        android:icon="@drawable/ic_person"
+        android:title="@string/nav_profile" />
+</menu>
