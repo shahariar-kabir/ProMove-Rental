@@ -13,5 +13,7 @@ data class House(
     val description: String = "",
     val imageUrl: String = "",
     val ownerId: String = "",
-    val type: String = "Apartment" // e.g., Apartment, House, Room
+    val type: String = "Apartment", // e.g., Apartment, House, Room
+    val latitude: Double = 23.8103, // Default to Dhaka coordinates
+    val longitude: Double = 90.4125
 ) : Serializable

@@ -124,22 +124,20 @@
                     android:textColor="@color/text_hint" />
             </LinearLayout>
 
-            <!-- Map View Placeholder -->
+            <!-- Map View -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="180dp"
+                android:layout_height="220dp"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="16dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
+                app:cardElevation="4dp">
 
-                <ImageView
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_location"
-                    android:background="#E0E0E0"
-                    android:contentDescription="@string/location" />
+                    android:layout_height="match_parent" />
+
             </androidx.cardview.widget.CardView>
 
             <!-- Top Rentals Section -->

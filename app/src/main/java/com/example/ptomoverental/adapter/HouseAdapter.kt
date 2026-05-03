@@ -17,10 +17,7 @@ class HouseAdapter(
     class HouseViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val ivHouse: ImageView = view.findViewById(R.id.ivHouseImage)
         val tvTitle: TextView = view.findViewById(R.id.tvTitle)
-        val tvLocation: TextView = view.findViewById(R.id.tvLocation)
         val tvPrice: TextView = view.findViewById(R.id.tvPrice)
-        val tvBedrooms: TextView = view.findViewById(R.id.tvBedrooms)
-        val tvBathrooms: TextView = view.findViewById(R.id.tvBathrooms)
         val tvArea: TextView = view.findViewById(R.id.tvArea)
     }
 
@@ -32,15 +29,16 @@ class HouseAdapter(
 
     override fun onBindViewHolder(holder: HouseViewHolder, position: Int) {
         val house = houses[position]
-        holder.tvTitle.text = house.title
-        holder.tvLocation.text = house.location
-        holder.tvPrice.text = house.price
-        holder.tvBedrooms.text = holder.itemView.context.getString(R.string.bedrooms_count, house.bedrooms)
-        holder.tvBathrooms.text = holder.itemView.context.getString(R.string.bathrooms_count, house.bathrooms)
-        holder.tvArea.text = house.area
+        val context = holder.itemView.context
         
-        // In a real app, use Glide or Coil to load images
-        // holder.ivHouse.setImageResource(R.drawable.house_placeholder)
+        holder.tvTitle.text = house.title
+        
+        // Use string resources for formatted text
+        holder.tvPrice.text = context.getString(R.string.rent_amount, house.price)
+        holder.tvArea.text = context.getString(R.string.sq_feet, house.area)
+        
+        // Use logo as placeholder for now
+        holder.ivHouse.setImageResource(R.drawable.logo)
 
         holder.itemView.setOnClickListener { onItemClick(house) }
     }
