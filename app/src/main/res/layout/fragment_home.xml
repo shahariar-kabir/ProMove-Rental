@@ -29,6 +29,7 @@
             android:orientation="horizontal">
 
             <ImageButton
+                android:id="@+id/btnProfile"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -37,6 +38,7 @@
                 android:contentDescription="@string/nav_profile" />
 
             <ImageButton
+                android:id="@+id/btnNotification"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="8dp"
@@ -104,6 +106,7 @@
                 android:padding="4dp">
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRentals"
                     style="@style/Widget.Material3.Button.UnelevatedButton"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
@@ -115,6 +118,7 @@
                     app:cornerRadius="8dp" />
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnShifting"
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
@@ -139,6 +143,28 @@
                     android:layout_height="match_parent" />
 
             </androidx.cardview.widget.CardView>
+
+            <!-- Featured Houses Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/featured_houses"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFeaturedHouses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                android:paddingHorizontal="24dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_house_featured" />
 
             <!-- Top Rentals Section -->
             <TextView

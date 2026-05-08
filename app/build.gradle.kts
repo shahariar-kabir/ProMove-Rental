@@ -3,15 +3,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.ptomoverental"
-    compileSdk = 36
-    // Removed nested release(36) block that might be causing issues
-
+    namespace = "com.example.promoverental"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.ptomoverental"
-        minSdk = 24
-        targetSdk = 36
+        applicationId = "com.example.promoverental"
+        minSdk = 21
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -31,7 +29,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    compileSdkMinor = 1
 }
 
 dependencies {

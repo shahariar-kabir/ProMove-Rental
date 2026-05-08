@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Ptomove&Rental"
+rootProject.name = "PromoveRental"
 include(":app")
  
