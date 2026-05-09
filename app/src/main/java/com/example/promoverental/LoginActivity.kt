@@ -8,6 +8,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 
+import androidx.lifecycle.lifecycleScope
+import com.example.promoverental.utils.SupabaseManager
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.builtin.Email
+import kotlinx.coroutines.launch
+
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,17 +27,37 @@ class LoginActivity : AppCompatActivity() {
         val tvForgotPassword = findViewById<TextView>(R.id.tvForgotPassword)
 
         btnContinue.setOnClickListener {
-            val username = etEmail.text.toString().trim()
+            val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Real Supabase Login
+            lifecycleScope.launch {
+                try {
+                    SupabaseManager.client.auth.signInWith(Email) {
+                        this.email = email
+                        this.password = password
+                    }
+                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    finish()
+                } catch (e: Exception) {
+                    Toast.makeText(this@LoginActivity, "Login failed: ${e.message}", Toast.LENGTH_LONG).show()
+                }
+            }
+            
+            /* 
+            // Local Mock Login
             if (username == "kabir" && password == "123456") {
-                // Successful login
                 startActivity(Intent(this, MainActivity::class.java))
-                finish() // Optional: close login activity
+                finish()
             } else {
-                // Failed login
                 Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show()
             }
+            */
         }
 
         val goToSignUp = {

@@ -8,6 +8,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
 
+import androidx.lifecycle.lifecycleScope
+import com.example.promoverental.utils.SupabaseManager
+import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.auth.providers.builtin.Email
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+
 class SignupActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +35,34 @@ class SignupActivity : AppCompatActivity() {
 
             if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
-            } else if (password.length < 6) {
+                return@setOnClickListener
+            } 
+            
+            if (password.length < 6) {
                 Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
-            } else {
-                startActivity(Intent(this, EmailVerificationActivity::class.java))
+                return@setOnClickListener
+            }
+
+            // Supabase Sign Up
+            lifecycleScope.launch {
+                try {
+                    SupabaseManager.client.auth.signUpWith(Email) {
+                        this.email = email
+                        this.password = password
+                        data = buildJsonObject {
+                            put("full_name", name)
+                        }
+                    }
+                    
+                    Toast.makeText(this@SignupActivity, "Verification email sent!", Toast.LENGTH_LONG).show()
+                    
+                    val intent = Intent(this@SignupActivity, EmailVerificationActivity::class.java)
+                    intent.putExtra("email", email)
+                    startActivity(intent)
+                    
+                } catch (e: Exception) {
+                    Toast.makeText(this@SignupActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                }
             }
         }
 

@@ -8,8 +8,14 @@ import android.view.KeyEvent
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.example.promoverental.utils.SupabaseManager
 import com.google.android.material.button.MaterialButton
+import io.github.jan.supabase.auth.OtpType
+import io.github.jan.supabase.auth.auth
+import kotlinx.coroutines.launch
 
 class EmailVerificationActivity : AppCompatActivity() {
 
@@ -18,11 +24,15 @@ class EmailVerificationActivity : AppCompatActivity() {
     private lateinit var otp3: EditText
     private lateinit var otp4: EditText
     private lateinit var otp5: EditText
+    private lateinit var otp6: EditText
     private lateinit var btnVerify: MaterialButton
+    private var userEmail: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_email_verification)
+
+        userEmail = intent.getStringExtra("email")
 
         // Initialize Views
         val btnBack = findViewById<ImageButton>(R.id.btnBack)
@@ -34,6 +44,7 @@ class EmailVerificationActivity : AppCompatActivity() {
         otp3 = findViewById(R.id.otpDigit3)
         otp4 = findViewById(R.id.otpDigit4)
         otp5 = findViewById(R.id.otpDigit5)
+        otp6 = findViewById(R.id.otpDigit6)
 
         // Back button
         btnBack.setOnClickListener {
@@ -42,7 +53,7 @@ class EmailVerificationActivity : AppCompatActivity() {
 
         // Resend Email
         tvResendEmail.setOnClickListener {
-            // Handle resend logic here (e.g., call API to resend OTP)
+            resendOtp()
         }
 
         // OTP Input Logic
@@ -50,22 +61,54 @@ class EmailVerificationActivity : AppCompatActivity() {
 
         // Verify Button
         btnVerify.setOnClickListener {
-            val isFromForgotPassword = intent.getBooleanExtra("isFromForgotPassword", false)
-            if (isFromForgotPassword) {
-                startActivity(Intent(this, SetNewPasswordActivity::class.java))
-            } else {
-                // Navigating to MainActivity which acts as the Finder Dashboard
-                startActivity(Intent(this, MainActivity::class.java))
-                finishAffinity()
-            }
+            verifyCode()
         }
         
         // Initial state check
         checkAllFields()
     }
 
+    private fun resendOtp() {
+        userEmail?.let { email ->
+            lifecycleScope.launch {
+                try {
+                    // Supabase sends a new OTP when you try to sign in/up again or via specialized reset calls
+                    Toast.makeText(this@EmailVerificationActivity, "Resending code to $email...", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Toast.makeText(this@EmailVerificationActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun verifyCode() {
+        val code = "${otp1.text}${otp2.text}${otp3.text}${otp4.text}${otp5.text}${otp6.text}"
+        val email = userEmail ?: return
+
+        lifecycleScope.launch {
+            try {
+                // In Supabase KT 3.x, use verifyEmailOtp
+                SupabaseManager.client.auth.verifyEmailOtp(
+                    type = OtpType.Email.SIGNUP,
+                    email = email,
+                    token = code
+                )
+                
+                val isFromForgotPassword = intent.getBooleanExtra("isFromForgotPassword", false)
+                if (isFromForgotPassword) {
+                    startActivity(Intent(this@EmailVerificationActivity, SetNewPasswordActivity::class.java))
+                } else {
+                    startActivity(Intent(this@EmailVerificationActivity, MainActivity::class.java))
+                    finishAffinity()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(this@EmailVerificationActivity, "Verification failed: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     private fun setupOtpInputs() {
-        val otpFields = listOf(otp1, otp2, otp3, otp4, otp5)
+        val otpFields = listOf(otp1, otp2, otp3, otp4, otp5, otp6)
         
         for (i in otpFields.indices) {
             otpFields[i].addTextChangedListener(object : TextWatcher {
@@ -103,7 +146,8 @@ class EmailVerificationActivity : AppCompatActivity() {
                       otp2.text.isNotEmpty() && 
                       otp3.text.isNotEmpty() && 
                       otp4.text.isNotEmpty() && 
-                      otp5.text.isNotEmpty()
+                      otp5.text.isNotEmpty() &&
+                      otp6.text.isNotEmpty()
         
         btnVerify.isEnabled = isFilled
         btnVerify.alpha = if (isFilled) 1.0f else 0.5f

@@ -106,6 +106,17 @@
                 android:inputType="number"
                 android:maxLength="1"
                 android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/otpDigit6"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/bg_otp_box"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:textSize="18sp" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton

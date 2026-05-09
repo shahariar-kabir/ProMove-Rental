@@ -1,7 +1,8 @@
 package com.example.promoverental.model
 
-import java.io.Serializable
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class House(
     val id: String = "",
     val title: String = "",
@@ -16,4 +17,4 @@ data class House(
     val type: String = "Apartment", // e.g., Apartment, House, Room
     val latitude: Double = 23.8103, // Default to Dhaka coordinates
     val longitude: Double = 90.4125
-) : Serializable
+) : java.io.Serializable
