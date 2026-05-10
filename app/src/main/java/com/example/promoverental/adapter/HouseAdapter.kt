@@ -12,6 +12,9 @@ import com.example.promoverental.model.House
 
 class HouseAdapter(
     private var houses: List<House>,
+    private val isOwner: Boolean = false,
+    private val onEditClick: ((House) -> Unit)? = null,
+    private val onDeleteClick: ((House) -> Unit)? = null,
     private val onItemClick: (House) -> Unit
 ) : RecyclerView.Adapter<HouseAdapter.HouseViewHolder>() {
 
@@ -20,6 +23,9 @@ class HouseAdapter(
         val tvTitle: TextView = view.findViewById(R.id.tvTitle)
         val tvPrice: TextView = view.findViewById(R.id.tvPrice)
         val tvArea: TextView = view.findViewById(R.id.tvArea)
+        val ownerActions: View = view.findViewById(R.id.ownerActions)
+        val btnEdit: View = view.findViewById(R.id.btnEdit)
+        val btnDelete: View = view.findViewById(R.id.btnDelete)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HouseViewHolder {
@@ -36,10 +42,20 @@ class HouseAdapter(
         holder.tvPrice.text = context.getString(R.string.rent_amount, house.price)
         holder.tvArea.text = context.getString(R.string.sq_feet, house.area)
         
-        holder.ivHouse.load(house.imageUrl) {
+        val firstImageUrl = house.imageUrls.firstOrNull()
+        holder.ivHouse.load(firstImageUrl) {
             crossfade(true)
             placeholder(R.drawable.logo)
             error(R.drawable.logo)
+        }
+
+        // Owner functionality
+        if (isOwner) {
+            holder.ownerActions.visibility = View.VISIBLE
+            holder.btnEdit.setOnClickListener { onEditClick?.invoke(house) }
+            holder.btnDelete.setOnClickListener { onDeleteClick?.invoke(house) }
+        } else {
+            holder.ownerActions.visibility = View.GONE
         }
 
         holder.itemView.setOnClickListener { onItemClick(house) }

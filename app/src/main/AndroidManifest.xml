@@ -44,6 +44,7 @@
         <activity android:name=".HouseDetailsActivity" />
         <activity android:name=".BookMovingServiceActivity" />
         <activity android:name=".SetNewPasswordActivity" />
+        <activity android:name=".FullScreenImageActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".MyBookingsActivity" />
     </application>

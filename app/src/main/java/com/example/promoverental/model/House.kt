@@ -13,8 +13,8 @@ data class House(
     val bathrooms: Int = 0,
     val area: String = "",
     val description: String = "",
-    @SerialName("image_url") val imageUrl: String = "", // ডাটাবেসের snake_case এর সাথে কানেক্ট করবে
-    @SerialName("owner_id") val ownerId: String = "",   // ডাটাবেসের snake_case এর সাথে কানেক্ট করবে
+    @SerialName("image_urls") val imageUrls: List<String> = emptyList(), // এখন অনেকগুলো ছবির লিঙ্ক থাকবে
+    @SerialName("owner_id") val ownerId: String = "",
     val type: String = "Apartment",
     val latitude: Double = 23.8103,
     val longitude: Double = 90.4125

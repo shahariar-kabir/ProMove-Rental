@@ -61,6 +61,34 @@
                 android:textSize="@dimen/text_size_sm"
                 android:textStyle="bold" />
 
+            <LinearLayout
+                android:id="@+id/ownerActions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <ImageButton
+                    android:id="@+id/btnEdit"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_edit"
+                    app:tint="@color/primary" />
+
+                <ImageButton
+                    android:id="@+id/btnDelete"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_logout"
+                    app:tint="@color/error" />
+
+            </LinearLayout>
+
         </RelativeLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

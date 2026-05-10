@@ -34,11 +34,14 @@ class SearchFragment : Fragment() {
         val etSearch = view.findViewById<EditText>(R.id.etSearch)
 
         rvSearchResults.layoutManager = LinearLayoutManager(context)
-        houseAdapter = HouseAdapter(emptyList()) { house ->
-            val intent = Intent(context, HouseDetailsActivity::class.java)
-            intent.putExtra("house", house)
-            startActivity(intent)
-        }
+        houseAdapter = HouseAdapter(
+            houses = emptyList(),
+            onItemClick = { house ->
+                val intent = Intent(context, HouseDetailsActivity::class.java)
+                intent.putExtra("house", house)
+                startActivity(intent)
+            }
+        )
         rvSearchResults.adapter = houseAdapter
 
         etSearch.addTextChangedListener(object : TextWatcher {

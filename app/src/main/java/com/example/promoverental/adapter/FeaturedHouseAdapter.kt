@@ -34,7 +34,8 @@ class FeaturedHouseAdapter(
         holder.tvLocation.text = house.location
         holder.tvPrice.text = house.price
         
-        holder.ivHouse.load(house.imageUrl) {
+        val firstImageUrl = house.imageUrls.firstOrNull()
+        holder.ivHouse.load(firstImageUrl) {
             crossfade(true)
             placeholder(R.drawable.logo)
             error(R.drawable.logo)

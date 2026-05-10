@@ -44,11 +44,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         val rvTopRentals = view.findViewById<RecyclerView>(R.id.rvTopRentals)
         rvTopRentals.layoutManager = LinearLayoutManager(context)
         
-        houseAdapter = HouseAdapter(emptyList()) { house ->
-            val intent = Intent(context, HouseDetailsActivity::class.java)
-            intent.putExtra("house", house)
-            startActivity(intent)
-        }
+        houseAdapter = HouseAdapter(
+            houses = emptyList(),
+            onItemClick = { house ->
+                val intent = Intent(context, HouseDetailsActivity::class.java)
+                intent.putExtra("house", house)
+                startActivity(intent)
+            }
+        )
         rvTopRentals.adapter = houseAdapter
 
         // Initialize Featured Houses
