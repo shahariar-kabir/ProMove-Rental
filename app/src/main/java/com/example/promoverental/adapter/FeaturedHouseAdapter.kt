@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.promoverental.R
 import com.example.promoverental.model.House
 
@@ -33,8 +34,11 @@ class FeaturedHouseAdapter(
         holder.tvLocation.text = house.location
         holder.tvPrice.text = house.price
         
-        // Use logo as placeholder for now
-        holder.ivHouse.setImageResource(R.drawable.logo)
+        holder.ivHouse.load(house.imageUrl) {
+            crossfade(true)
+            placeholder(R.drawable.logo)
+            error(R.drawable.logo)
+        }
 
         holder.itemView.setOnClickListener { onItemClick(house) }
     }

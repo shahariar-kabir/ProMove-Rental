@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.promoverental.R
 import com.example.promoverental.model.House
 
@@ -32,13 +33,14 @@ class HouseAdapter(
         val context = holder.itemView.context
 
         holder.tvTitle.text = house.title
-
-        // Use string resources for formatted text
         holder.tvPrice.text = context.getString(R.string.rent_amount, house.price)
         holder.tvArea.text = context.getString(R.string.sq_feet, house.area)
         
-        // Use logo as placeholder for now
-        holder.ivHouse.setImageResource(R.drawable.logo)
+        holder.ivHouse.load(house.imageUrl) {
+            crossfade(true)
+            placeholder(R.drawable.logo)
+            error(R.drawable.logo)
+        }
 
         holder.itemView.setOnClickListener { onItemClick(house) }
     }

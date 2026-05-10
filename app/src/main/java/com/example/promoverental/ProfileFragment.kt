@@ -5,8 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.promoverental.utils.SupabaseManager
 import com.google.android.material.button.MaterialButton
+import io.github.jan.supabase.auth.auth
+import kotlinx.coroutines.launch
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
 
 class ProfileFragment : Fragment() {
     override fun onCreateView(
@@ -14,6 +22,14 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        val user = SupabaseManager.client.auth.currentUserOrNull()
+        val name = user?.userMetadata?.get("full_name")?.toString()?.replace("\"", "") ?: "User"
+        val email = user?.email ?: ""
+        val currentRole = user?.userMetadata?.get("role")?.toString()?.replace("\"", "") ?: "finder"
+
+        view.findViewById<TextView>(R.id.tvName).text = name
+        view.findViewById<TextView>(R.id.tvEmail).text = email
 
         view.findViewById<MaterialButton>(R.id.btnEditProfile).setOnClickListener {
             startActivity(Intent(context, EditProfileActivity::class.java))
@@ -28,16 +44,37 @@ class ProfileFragment : Fragment() {
         }
 
         view.findViewById<MaterialButton>(R.id.btnSwitchRole).setOnClickListener {
-            // Check current role logic here in real app from user metadata
-            startActivity(Intent(context, OwnerDashboardActivity::class.java))
-            activity?.finish()
+            val newRole = if (currentRole == "finder") "owner" else "finder"
+            
+            lifecycleScope.launch {
+                try {
+                    SupabaseManager.client.auth.updateUser {
+                        data = buildJsonObject {
+                            put("role", newRole)
+                        }
+                    }
+                    
+                    Toast.makeText(context, "Role switched to $newRole", Toast.LENGTH_SHORT).show()
+                    
+                    val nextActivity = if (newRole == "owner") OwnerDashboardActivity::class.java else MainActivity::class.java
+                    val intent = Intent(context, nextActivity)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(intent)
+                    activity?.finish()
+                } catch (e: Exception) {
+                    Toast.makeText(context, "Switch failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         view.findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener {
-            val intent = Intent(context, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            activity?.finish()
+            lifecycleScope.launch {
+                SupabaseManager.client.auth.signOut()
+                val intent = Intent(context, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                activity?.finish()
+            }
         }
 
         return view

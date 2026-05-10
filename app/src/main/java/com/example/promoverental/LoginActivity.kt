@@ -7,7 +7,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.button.MaterialButton
-
 import androidx.lifecycle.lifecycleScope
 import com.example.promoverental.utils.SupabaseManager
 import io.github.jan.supabase.auth.auth
@@ -35,29 +34,27 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Real Supabase Login
             lifecycleScope.launch {
                 try {
                     SupabaseManager.client.auth.signInWith(Email) {
                         this.email = email
                         this.password = password
                     }
-                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    
+                    val user = SupabaseManager.client.auth.currentUserOrNull()
+                    val role = user?.userMetadata?.get("role")?.toString()?.replace("\"", "") ?: "finder"
+                    
+                    if (role == "owner") {
+                        startActivity(Intent(this@LoginActivity, OwnerDashboardActivity::class.java))
+                    } else {
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    }
                     finish()
+                    
                 } catch (e: Exception) {
                     Toast.makeText(this@LoginActivity, "Login failed: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
-            
-            /* 
-            // Local Mock Login
-            if (username == "kabir" && password == "123456") {
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            } else {
-                Toast.makeText(this, "Invalid username or password", Toast.LENGTH_SHORT).show()
-            }
-            */
         }
 
         val goToSignUp = {

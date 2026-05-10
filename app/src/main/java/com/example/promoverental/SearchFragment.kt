@@ -8,21 +8,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.promoverental.adapter.HouseAdapter
 import com.example.promoverental.model.House
+import com.example.promoverental.utils.SupabaseManager
+import io.github.jan.supabase.postgrest.postgrest
+import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment() {
 
     private lateinit var houseAdapter: HouseAdapter
-    private val allHouses = listOf(
-        House("1", "Modern Apartment", "Gulshan, Dhaka", "$500/mo", 3, 2, "1200 sqft", "A beautiful modern apartment."),
-        House("2", "Cozy Studio", "Banani, Dhaka", "$300/mo", 1, 1, "500 sqft", "Perfect for students."),
-        House("3", "Luxury Villa", "Uttara, Dhaka", "$1500/mo", 5, 4, "4000 sqft", "Huge villa with a pool."),
-        House("4", "Office Space", "Dhanmondi, Dhaka", "$800/mo", 0, 1, "1500 sqft", "Ideal for startups.")
-    )
+    private var allHouses: List<House> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +34,7 @@ class SearchFragment : Fragment() {
         val etSearch = view.findViewById<EditText>(R.id.etSearch)
 
         rvSearchResults.layoutManager = LinearLayoutManager(context)
-        houseAdapter = HouseAdapter(allHouses) { house ->
+        houseAdapter = HouseAdapter(emptyList()) { house ->
             val intent = Intent(context, HouseDetailsActivity::class.java)
             intent.putExtra("house", house)
             startActivity(intent)
@@ -49,7 +49,21 @@ class SearchFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+        fetchHouses()
+
         return view
+    }
+
+    private fun fetchHouses() {
+        lifecycleScope.launch {
+            try {
+                allHouses = SupabaseManager.client.postgrest["houses"]
+                    .select().decodeList<House>()
+                houseAdapter.updateData(allHouses)
+            } catch (e: Exception) {
+                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun filter(text: String) {

@@ -42,6 +42,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:19.0.0")
     implementation("com.google.android.gms:play-services-location:21.3.0")
     
+    // Image Loading
+    implementation("io.coil-kt:coil:2.6.0")
+    
     // Supabase
     implementation(libs.bundles.supabase)
     implementation(libs.bundles.ktor)
