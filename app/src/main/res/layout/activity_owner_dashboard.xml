@@ -16,6 +16,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:title="@string/dashboard"
             app:titleTextColor="@color/white">
 
@@ -71,7 +72,7 @@
                 <!-- Spacer -->
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="24dp" />
+                    android:layout_height="16dp" />
 
                 <!-- Stats Cards Row 1 -->
                 <LinearLayout
@@ -91,11 +92,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="12dp">
 
                             <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
                                 android:src="@drawable/ic_home"
                                 android:tint="@color/primary"
                                 android:contentDescription="@string/total_houses" />
@@ -104,9 +105,9 @@
                                 android:id="@+id/tvTotalHouses"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="4dp"
                                 android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_size_xxl"
+                                android:textSize="@dimen/text_size_xl"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -137,11 +138,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="12dp">
 
                             <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
                                 android:src="@drawable/ic_check_circle"
                                 android:tint="@color/success"
                                 android:contentDescription="@string/available_houses" />
@@ -150,9 +151,9 @@
                                 android:id="@+id/tvAvailableHouses"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="4dp"
                                 android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_size_xxl"
+                                android:textSize="@dimen/text_size_xl"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -191,11 +192,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="12dp">
 
                             <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
                                 android:src="@drawable/ic_key"
                                 android:tint="@color/secondary"
                                 android:contentDescription="@string/rented_houses" />
@@ -204,9 +205,9 @@
                                 android:id="@+id/tvRentedHouses"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="4dp"
                                 android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_size_xxl"
+                                android:textSize="@dimen/text_size_xl"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -237,11 +238,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="12dp">
 
                             <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
                                 android:src="@drawable/ic_pending"
                                 android:tint="@color/warning"
                                 android:contentDescription="@string/pending_requests" />
@@ -250,9 +251,9 @@
                                 android:id="@+id/tvPendingRequests"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="4dp"
                                 android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_size_xxl"
+                                android:textSize="@dimen/text_size_xl"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -271,7 +272,7 @@
                 <!-- Spacer -->
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="24dp" />
+                    android:layout_height="16dp" />
 
                 <!-- My Houses Section -->
                 <LinearLayout
@@ -286,7 +287,7 @@
                         android:layout_weight="1"
                         android:text="@string/my_houses"
                         android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_xl"
+                        android:textSize="@dimen/text_size_lg"
                         android:textStyle="bold" />
 
                     <TextView
@@ -299,11 +300,6 @@
                         android:textSize="@dimen/text_size_md" />
 
                 </LinearLayout>
-
-                <!-- Spacer -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="12dp" />
 
                 <!-- My Houses RecyclerView -->
                 <androidx.recyclerview.widget.RecyclerView
@@ -320,12 +316,12 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="48dp"
+                    android:padding="32dp"
                     android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:src="@drawable/ic_home"
                         android:tint="@color/text_hint"
                         android:contentDescription="@string/no_houses_found" />
@@ -333,10 +329,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
                         android:text="@string/no_houses_yet"
                         android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_lg" />
+                        android:textSize="@dimen/text_size_md" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnAddFirstHouse"
@@ -354,7 +350,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="48dp"
+                    android:layout_marginTop="32dp"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -372,6 +368,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:contentDescription="@string/add_house"
         android:src="@drawable/ic_add"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:backgroundTint="@color/secondary"
         app:tint="@color/white" />
 
@@ -382,6 +379,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/background"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:itemIconTint="@drawable/bottom_nav_color_selector"
         app:itemTextColor="@drawable/bottom_nav_color_selector"
         app:labelVisibilityMode="labeled"

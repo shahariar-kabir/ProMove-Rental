@@ -28,7 +28,9 @@ class ProfileFragment : Fragment() {
         }
 
         view.findViewById<MaterialButton>(R.id.btnSwitchRole).setOnClickListener {
+            // Check current role logic here in real app from user metadata
             startActivity(Intent(context, OwnerDashboardActivity::class.java))
+            activity?.finish()
         }
 
         view.findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener {

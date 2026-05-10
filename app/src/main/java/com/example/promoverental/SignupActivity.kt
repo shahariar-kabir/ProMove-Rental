@@ -43,27 +43,12 @@ class SignupActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Supabase Sign Up
-            lifecycleScope.launch {
-                try {
-                    SupabaseManager.client.auth.signUpWith(Email) {
-                        this.email = email
-                        this.password = password
-                        data = buildJsonObject {
-                            put("full_name", name)
-                        }
-                    }
-                    
-                    Toast.makeText(this@SignupActivity, "Verification email sent!", Toast.LENGTH_LONG).show()
-                    
-                    val intent = Intent(this@SignupActivity, EmailVerificationActivity::class.java)
-                    intent.putExtra("email", email)
-                    startActivity(intent)
-                    
-                } catch (e: Exception) {
-                    Toast.makeText(this@SignupActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-                }
-            }
+            // Move to profile completion screen
+            val intent = Intent(this, CompleteProfileActivity::class.java)
+            intent.putExtra("name", name)
+            intent.putExtra("email", email)
+            intent.putExtra("password", password)
+            startActivity(intent)
         }
 
         val goToLogin = {

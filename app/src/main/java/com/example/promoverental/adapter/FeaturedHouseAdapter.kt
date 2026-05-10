@@ -19,8 +19,6 @@ class FeaturedHouseAdapter(
         val tvTitle: TextView = view.findViewById(R.id.tvTitle)
         val tvLocation: TextView = view.findViewById(R.id.tvLocation)
         val tvPrice: TextView = view.findViewById(R.id.tvPrice)
-        val tvBedrooms: TextView = view.findViewById(R.id.tvBedrooms)
-        val tvBathrooms: TextView = view.findViewById(R.id.tvBathrooms)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeaturedHouseViewHolder {
@@ -34,10 +32,9 @@ class FeaturedHouseAdapter(
         holder.tvTitle.text = house.title
         holder.tvLocation.text = house.location
         holder.tvPrice.text = house.price
-        holder.tvBedrooms.text = holder.itemView.context.getString(R.string.bedrooms_count, house.bedrooms)
-        holder.tvBathrooms.text = holder.itemView.context.getString(R.string.bathrooms_count, house.bathrooms)
         
-        // holder.ivHouse.setImageResource(R.drawable.house_placeholder)
+        // Use logo as placeholder for now
+        holder.ivHouse.setImageResource(R.drawable.logo)
 
         holder.itemView.setOnClickListener { onItemClick(house) }
     }

@@ -3,22 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="24dp"
-    android:layout_marginBottom="12dp"
+    android:layout_marginHorizontal="@dimen/element_margin"
+    android:layout_marginBottom="8dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="0dp">
+    app:cardElevation="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="8dp">
 
         <!-- House Image -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/ivHouseImage"
-            android:layout_width="100dp"
-            android:layout_height="80dp"
+            android:layout_width="80dp"
+            android:layout_height="70dp"
             android:scaleType="centerCrop"
             android:src="@drawable/logo"
             app:shapeAppearanceOverlay="@style/ShapeAppearance.App.MediumComponent" />
@@ -26,7 +26,7 @@
         <!-- Info Section -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="70dp"
             android:layout_marginStart="12dp">
 
             <TextView
@@ -35,18 +35,20 @@
                 android:layout_height="wrap_content"
                 android:text="2 Bed room"
                 android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="@dimen/text_size_md"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/tvArea"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvTitle"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="2dp"
                 android:text="1400 Sq feet"
                 android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_size_sm" />
 
             <TextView
                 android:id="@+id/tvPrice"
@@ -55,8 +57,8 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:text="Rent: 5000 BDT/ Month"
-                android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/text_size_sm"
                 android:textStyle="bold" />
 
         </RelativeLayout>

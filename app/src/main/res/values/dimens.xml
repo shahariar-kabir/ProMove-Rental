@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="screen_padding">24dp</dimen>
-    <dimen name="text_size_title">24sp</dimen>
-    <dimen name="text_size_xl">20sp</dimen>
-    <dimen name="text_size_lg">16sp</dimen>
-    <dimen name="text_size_md">14sp</dimen>
-    <dimen name="text_size_sm">12sp</dimen>
-    <dimen name="button_height">56dp</dimen>
-    <dimen name="input_height">56dp</dimen>
-    <dimen name="profile_image_size">100dp</dimen>
-    <dimen name="text_size_xxl">32sp</dimen>
+    <!-- Screen Spacing -->
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="element_margin">16dp</dimen>
+    <dimen name="card_margin">12dp</dimen>
+
+    <!-- Text Sizes (Optimized) -->
+    <dimen name="text_size_xxl">24sp</dimen>
+    <dimen name="text_size_xl">18sp</dimen>
+    <dimen name="text_size_lg">15sp</dimen>
+    <dimen name="text_size_md">13sp</dimen>
+    <dimen name="text_size_sm">11sp</dimen>
+    <dimen name="text_size_title">22sp</dimen>
+
+    <!-- UI Elements -->
+    <dimen name="button_height">50dp</dimen>
+    <dimen name="input_height">50dp</dimen>
+    <dimen name="profile_image_size">90dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 </resources>

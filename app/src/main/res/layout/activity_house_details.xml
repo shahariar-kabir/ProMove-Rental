@@ -9,7 +9,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="240dp"
         android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="@color/primary"
-                    android:textSize="@dimen/text_size_xxl"
+                    android:textSize="@dimen/text_size_xl"
                     android:textStyle="bold" />
 
                 <TextView
@@ -95,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_status_available"
-                    android:paddingHorizontal="12dp"
+                    android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
                     android:text="@string/available"
                     android:textColor="@color/white"
@@ -108,22 +108,22 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_xl"
+                android:textSize="@dimen/text_size_lg"
                 android:textStyle="bold" />
 
             <!-- Location -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="6dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:src="@drawable/ic_location"
                     android:tint="@color/text_secondary"
                     android:contentDescription="@string/location" />
@@ -132,7 +132,7 @@
                     android:id="@+id/tvLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="6dp"
                     android:textColor="@color/text_secondary"
                     android:textSize="@dimen/text_size_md" />
 
@@ -153,11 +153,11 @@
                     android:background="@drawable/bg_card"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="10dp">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:src="@drawable/ic_bed"
                         android:tint="@color/primary"
                         android:contentDescription="@string/bedrooms" />
@@ -189,11 +189,11 @@
                     android:background="@drawable/bg_card"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="10dp">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:src="@drawable/ic_bath"
                         android:tint="@color/primary"
                         android:contentDescription="@string/bathrooms" />
@@ -225,11 +225,11 @@
                     android:background="@drawable/bg_card"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="10dp">
 
                     <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:src="@drawable/ic_area"
                         android:tint="@color/primary"
                         android:contentDescription="@string/area" />
@@ -258,18 +258,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/description"
                 android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_xl"
+                android:textSize="@dimen/text_size_lg"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:lineSpacingMultiplier="1.3"
+                android:layout_marginTop="6dp"
+                android:lineSpacingMultiplier="1.2"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_size_md" />
 
@@ -277,10 +277,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/facilities"
                 android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_xl"
+                android:textSize="@dimen/text_size_lg"
                 android:textStyle="bold" />
 
             <com.google.android.material.chip.ChipGroup
@@ -293,31 +293,31 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/contact_owner"
                 android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_xl"
+                android:textSize="@dimen/text_size_lg"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/bg_card"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="12dp">
+                android:padding="10dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivOwnerPhoto"
-                    android:layout_width="56dp"
-                    android:layout_height="56dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:src="@drawable/ic_person_outline" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -326,23 +326,23 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_lg"
+                        android:textSize="@dimen/text_size_md"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvOwnerPhone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="2dp"
                         android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_md" />
+                        android:textSize="@dimen/text_size_sm" />
 
                 </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/btnCallOwner"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:background="@drawable/bg_circle_primary"
                     android:contentDescription="@string/call"
                     android:src="@drawable/ic_phone"
@@ -367,13 +367,14 @@
         android:background="@color/background"
         android:elevation="8dp"
         android:orientation="horizontal"
-        android:padding="@dimen/screen_padding">
+        android:padding="@dimen/screen_padding"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior">
 
         <!-- Favorite Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnFavorite"
             style="@style/SecondaryButton"
-            android:layout_width="56dp"
+            android:layout_width="50dp"
             android:layout_height="@dimen/button_height"
             app:icon="@drawable/ic_favorite"
             app:iconGravity="textStart"

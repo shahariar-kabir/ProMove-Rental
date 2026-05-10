@@ -76,22 +76,26 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 houseAdapter.updateData(houses)
                 
                 // Update Featured Houses (shuffled)
-                view?.findViewById<RecyclerView>(R.id.rvFeaturedHouses)?.adapter = 
-                    FeaturedHouseAdapter(houses.shuffled()) { house ->
+                val rvFeatured = view?.findViewById<RecyclerView>(R.id.rvFeaturedHouses)
+                if (rvFeatured != null && isAdded) {
+                    rvFeatured.adapter = FeaturedHouseAdapter(houses.shuffled()) { house ->
                         val intent = Intent(context, HouseDetailsActivity::class.java)
                         intent.putExtra("house", house)
                         startActivity(intent)
                     }
+                }
 
                 // Add markers to map
-                houses.forEach { house ->
-                    val location = LatLng(house.latitude, house.longitude)
-                    googleMap?.addMarker(
-                        MarkerOptions()
-                            .position(location)
-                            .title(house.title)
-                            .snippet(house.price)
-                    )
+                if (googleMap != null) {
+                    houses.forEach { house ->
+                        val location = LatLng(house.latitude, house.longitude)
+                        googleMap?.addMarker(
+                            MarkerOptions()
+                                .position(location)
+                                .title(house.title)
+                                .snippet(house.price)
+                        )
+                    }
                 }
             } catch (e: Exception) {
                 // Fallback to sample data if database table is not ready

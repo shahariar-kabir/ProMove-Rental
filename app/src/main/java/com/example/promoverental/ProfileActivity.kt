@@ -20,7 +20,13 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         findViewById<MaterialButton>(R.id.btnSwitchRole).setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            // Logic to switch dashboard
+            val currentRole = intent.getStringExtra("role") ?: "finder"
+            if (currentRole == "finder") {
+                startActivity(Intent(this, OwnerDashboardActivity::class.java))
+            } else {
+                startActivity(Intent(this, MainActivity::class.java))
+            }
             finish()
         }
 

@@ -7,48 +7,6 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <!-- Custom Header -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="8dp">
-
-        <ImageView
-            android:layout_width="120dp"
-            android:layout_height="60dp"
-            android:src="@drawable/logo"
-            android:contentDescription="@string/cd_logo" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/btnProfile"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_person_outline"
-                app:tint="@color/black"
-                android:contentDescription="@string/nav_profile" />
-
-            <ImageButton
-                android:id="@+id/btnNotification"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_notification"
-                app:tint="@color/black"
-                android:contentDescription="@string/notifications" />
-        </LinearLayout>
-    </RelativeLayout>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -57,17 +15,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
 
             <!-- Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="@dimen/element_margin"
+                android:layout_marginTop="@dimen/element_margin"
                 android:text="@string/find_next_home"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_size_xl"
                 android:textStyle="bold" />
 
             <!-- Search Bar -->
@@ -75,8 +34,8 @@
                 style="@style/Widget.Material3.TextInputLayout.FilledBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="@dimen/element_margin"
+                android:layout_marginTop="@dimen/element_margin"
                 app:boxBackgroundColor="#F5F5F5"
                 app:boxCornerRadiusBottomEnd="12dp"
                 app:boxCornerRadiusBottomStart="12dp"
@@ -92,7 +51,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/search_hint"
-                    android:padding="12dp" />
+                    android:padding="12dp"
+                    android:textSize="@dimen/text_size_md" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -100,8 +60,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="@dimen/element_margin"
+                android:layout_marginTop="@dimen/element_margin"
                 android:background="#F5F5F5"
                 android:padding="4dp">
 
@@ -114,6 +74,7 @@
                     android:text="@string/rentals"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_sm"
                     app:backgroundTint="@color/primary"
                     app:cornerRadius="8dp" />
 
@@ -125,17 +86,18 @@
                     android:layout_weight="1"
                     android:text="@string/shifting"
                     android:textAllCaps="false"
-                    android:textColor="@color/text_hint" />
+                    android:textColor="@color/text_hint"
+                    android:textSize="@dimen/text_size_sm" />
             </LinearLayout>
 
             <!-- Map View -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="180dp"
+                android:layout_marginHorizontal="@dimen/element_margin"
+                android:layout_marginTop="@dimen/element_margin"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
+                app:cardElevation="2dp">
 
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/mapView"
@@ -148,11 +110,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="@dimen/element_margin"
+                android:layout_marginTop="20dp"
                 android:text="@string/featured_houses"
                 android:textColor="@color/black"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_lg"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -162,7 +124,7 @@
                 android:layout_marginTop="8dp"
                 android:clipToPadding="false"
                 android:orientation="horizontal"
-                android:paddingHorizontal="24dp"
+                android:paddingHorizontal="@dimen/element_margin"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_house_featured" />
 
@@ -170,11 +132,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="@dimen/element_margin"
+                android:layout_marginTop="20dp"
                 android:text="@string/top_rentals"
                 android:textColor="@color/black"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_lg"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -182,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:paddingBottom="24dp"
+                android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_house_list" />
 
