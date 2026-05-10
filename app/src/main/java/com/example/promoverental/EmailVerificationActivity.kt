@@ -25,6 +25,8 @@ class EmailVerificationActivity : AppCompatActivity() {
     private lateinit var otp4: EditText
     private lateinit var otp5: EditText
     private lateinit var otp6: EditText
+    private lateinit var otp7: EditText
+    private lateinit var otp8: EditText
     private lateinit var btnVerify: MaterialButton
     private var userEmail: String? = null
 
@@ -45,6 +47,8 @@ class EmailVerificationActivity : AppCompatActivity() {
         otp4 = findViewById(R.id.otpDigit4)
         otp5 = findViewById(R.id.otpDigit5)
         otp6 = findViewById(R.id.otpDigit6)
+        otp7 = findViewById(R.id.otpDigit7)
+        otp8 = findViewById(R.id.otpDigit8)
 
         // Back button
         btnBack.setOnClickListener {
@@ -53,7 +57,7 @@ class EmailVerificationActivity : AppCompatActivity() {
 
         // Resend Email
         tvResendEmail.setOnClickListener {
-            resendOtp()
+            Toast.makeText(this, "Resending code...", Toast.LENGTH_SHORT).show()
         }
 
         // OTP Input Logic
@@ -68,26 +72,12 @@ class EmailVerificationActivity : AppCompatActivity() {
         checkAllFields()
     }
 
-    private fun resendOtp() {
-        userEmail?.let { email ->
-            lifecycleScope.launch {
-                try {
-                    // Supabase sends a new OTP when you try to sign in/up again or via specialized reset calls
-                    Toast.makeText(this@EmailVerificationActivity, "Resending code to $email...", Toast.LENGTH_SHORT).show()
-                } catch (e: Exception) {
-                    Toast.makeText(this@EmailVerificationActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
     private fun verifyCode() {
-        val code = "${otp1.text}${otp2.text}${otp3.text}${otp4.text}${otp5.text}${otp6.text}"
+        val code = "${otp1.text}${otp2.text}${otp3.text}${otp4.text}${otp5.text}${otp6.text}${otp7.text}${otp8.text}"
         val email = userEmail ?: return
 
         lifecycleScope.launch {
             try {
-                // In Supabase KT 3.x, use verifyEmailOtp
                 SupabaseManager.client.auth.verifyEmailOtp(
                     type = OtpType.Email.SIGNUP,
                     email = email,
@@ -108,7 +98,7 @@ class EmailVerificationActivity : AppCompatActivity() {
     }
 
     private fun setupOtpInputs() {
-        val otpFields = listOf(otp1, otp2, otp3, otp4, otp5, otp6)
+        val otpFields = listOf(otp1, otp2, otp3, otp4, otp5, otp6, otp7, otp8)
         
         for (i in otpFields.indices) {
             otpFields[i].addTextChangedListener(object : TextWatcher {
@@ -147,7 +137,9 @@ class EmailVerificationActivity : AppCompatActivity() {
                       otp3.text.isNotEmpty() && 
                       otp4.text.isNotEmpty() && 
                       otp5.text.isNotEmpty() &&
-                      otp6.text.isNotEmpty()
+                      otp6.text.isNotEmpty() &&
+                      otp7.text.isNotEmpty() &&
+                      otp8.text.isNotEmpty()
         
         btnVerify.isEnabled = isFilled
         btnVerify.alpha = if (isFilled) 1.0f else 0.5f

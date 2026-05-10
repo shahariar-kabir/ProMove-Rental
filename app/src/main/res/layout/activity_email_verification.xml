@@ -51,72 +51,104 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="8">
 
             <EditText
                 android:id="@+id/otpDigit1"
-                android:layout_width="56dp"
+                android:layout_width="0dp"
                 android:layout_height="56dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
                 android:background="@drawable/bg_otp_box"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/otpDigit2"
-                android:layout_width="56dp"
+                android:layout_width="0dp"
                 android:layout_height="56dp"
-                android:layout_marginStart="12dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
                 android:background="@drawable/bg_otp_box"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/otpDigit3"
-                android:layout_width="56dp"
+                android:layout_width="0dp"
                 android:layout_height="56dp"
-                android:layout_marginStart="12dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
                 android:background="@drawable/bg_otp_box"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/otpDigit4"
-                android:layout_width="56dp"
+                android:layout_width="0dp"
                 android:layout_height="56dp"
-                android:layout_marginStart="12dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
                 android:background="@drawable/bg_otp_box"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/otpDigit5"
-                android:layout_width="56dp"
+                android:layout_width="0dp"
                 android:layout_height="56dp"
-                android:layout_marginStart="12dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
                 android:background="@drawable/bg_otp_box"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <EditText
                 android:id="@+id/otpDigit6"
-                android:layout_width="56dp"
+                android:layout_width="0dp"
                 android:layout_height="56dp"
-                android:layout_marginStart="12dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
                 android:background="@drawable/bg_otp_box"
                 android:gravity="center"
                 android:inputType="number"
                 android:maxLength="1"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/otpDigit7"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_otp_box"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/otpDigit8"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_otp_box"
+                android:gravity="center"
+                android:inputType="number"
+                android:maxLength="1"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
