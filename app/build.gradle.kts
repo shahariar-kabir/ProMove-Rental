@@ -48,6 +48,7 @@ dependencies {
     // Supabase
     implementation(libs.bundles.supabase)
     implementation(libs.bundles.ktor)
+    implementation(libs.lottie)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     testImplementation(libs.junit)

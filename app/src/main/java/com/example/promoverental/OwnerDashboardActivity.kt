@@ -16,7 +16,7 @@ import com.example.promoverental.adapter.HouseAdapter
 import com.example.promoverental.model.House
 import com.example.promoverental.utils.SupabaseManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.launch
@@ -37,7 +37,7 @@ class OwnerDashboardActivity : AppCompatActivity() {
         swipeRefresh = findViewById(R.id.swipeRefresh)
         emptyState = findViewById(R.id.emptyState)
         progressBar = findViewById(R.id.progressBar)
-        val fabAdd = findViewById<FloatingActionButton>(R.id.fabAddHouse)
+        val fabAdd = findViewById<ExtendedFloatingActionButton>(R.id.fabAddHouse)
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNavigation)
 
         val user = SupabaseManager.client.auth.currentUserOrNull()

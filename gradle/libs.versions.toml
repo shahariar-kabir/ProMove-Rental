@@ -10,8 +10,10 @@ activity = "1.8.0"
 constraintlayout = "2.1.4"
 supabase = "3.6.0"
 ktor = "3.0.1"
+lottie = "6.4.0"
 
 [libraries]
+lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" }
 supabase-postgrest = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt", version.ref = "supabase" }
 supabase-auth = { group = "io.github.jan-tennert.supabase", name = "auth-kt", version.ref = "supabase" }
 supabase-storage = { group = "io.github.jan-tennert.supabase", name = "storage-kt", version.ref = "supabase" }

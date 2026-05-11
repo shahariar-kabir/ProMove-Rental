@@ -27,6 +27,7 @@ class ImageSliderAdapter(
     override fun onBindViewHolder(holder: SliderViewHolder, position: Int) {
         val url = imageUrls[position]
         holder.imageView.load(url) {
+            crossfade(true)
             placeholder(R.drawable.logo)
             error(R.drawable.logo)
         }

@@ -2,6 +2,7 @@ package com.example.promoverental
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -22,8 +23,9 @@ class LoginActivity : AppCompatActivity() {
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnContinue = findViewById<MaterialButton>(R.id.btnContinue)
         val tvSignUp = findViewById<TextView>(R.id.tvSignUp)
-        val tabSignUp = findViewById<android.view.View>(R.id.tabSignUp)
         val tvForgotPassword = findViewById<TextView>(R.id.tvForgotPassword)
+
+        val btnLoadingAnim = findViewById<com.airbnb.lottie.LottieAnimationView>(R.id.btnLoadingAnim)
 
         btnContinue.setOnClickListener {
             val email = etEmail.text.toString().trim()
@@ -33,6 +35,12 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            // Start Animation
+            btnContinue.text = "" // টেক্সট মুছে ফেলা
+            btnContinue.isEnabled = false
+            btnLoadingAnim.visibility = View.VISIBLE
+            btnLoadingAnim.playAnimation()
 
             lifecycleScope.launch {
                 try {
@@ -52,6 +60,12 @@ class LoginActivity : AppCompatActivity() {
                     finish()
                     
                 } catch (e: Exception) {
+                    // Stop Animation on error
+                    btnContinue.text = getString(R.string.continue_btn)
+                    btnContinue.isEnabled = true
+                    btnLoadingAnim.visibility = View.GONE
+                    btnLoadingAnim.cancelAnimation()
+
                     Toast.makeText(this@LoginActivity, "Login failed: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
@@ -62,7 +76,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
         tvSignUp.setOnClickListener { goToSignUp() }
-        tabSignUp.setOnClickListener { goToSignUp() }
 
         tvForgotPassword.setOnClickListener {
             startActivity(Intent(this, ForgotPasswordActivity::class.java))

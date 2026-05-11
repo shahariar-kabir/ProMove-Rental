@@ -1,302 +1,254 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:fillViewport="true">
+    android:background="?attr/colorSurface">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        app:elevation="0dp"
+        android:background="?attr/colorSurface">
 
-        <!-- Toolbar -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/primary"
             app:navigationIcon="@drawable/ic_back"
-            app:navigationIconTint="@color/white"
             app:title="@string/book_moving_service"
-            app:titleTextColor="@color/white" />
+            app:titleCentered="true" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/screen_padding">
+            android:padding="20dp">
 
-            <!-- Provider Info Card -->
             <com.google.android.material.card.MaterialCardView
+                style="?attr/materialCardViewFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="24dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:padding="20dp">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/ivProviderLogo"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:background="@drawable/bg_circle_primary"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
                         android:padding="12dp"
+                        android:background="?attr/colorPrimaryContainer"
                         android:src="@drawable/ic_moving"
-                        android:tint="@color/white"
-                        android:contentDescription="@string/provider_name" />
+                        app:tint="?attr/colorOnPrimaryContainer"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.MediumComponent" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tvProviderName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
-                            android:textSize="@dimen/text_size_lg"
-                            android:textStyle="bold" />
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textStyle="bold"
+                            tools:text="Smooth Movers" />
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/tvProviderRating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:src="@drawable/ic_star"
-                                android:tint="@color/rating_star"
-                                android:contentDescription="@string/provider_rating" />
-
-                            <TextView
-                                android:id="@+id/tvProviderRating"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="4dp"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="@dimen/text_size_md" />
-
-                        </LinearLayout>
+                            android:layout_marginTop="2dp"
+                            android:textAppearance="?attr/textAppearanceLabelMedium"
+                            android:textColor="?attr/colorOutline"
+                            app:drawableStartCompat="@drawable/ic_star"
+                            app:drawableTint="@color/rating_star"
+                            android:drawablePadding="4dp"
+                            tools:text="4.8 (120 reviews)" />
 
                         <TextView
                             android:id="@+id/tvProviderPrice"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textColor="@color/primary"
-                            android:textSize="@dimen/text_size_md"
-                            android:textStyle="bold" />
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textColor="?attr/colorPrimary"
+                            android:textStyle="bold"
+                            tools:text="$50 - $200" />
 
                     </LinearLayout>
-
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Spacer -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="24dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Booking Details"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:textStyle="bold" />
 
-            <!-- From Address -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilFromAddress"
-                style="@style/InputFieldStyle"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:hint="@string/from_address"
                 app:startIconDrawable="@drawable/ic_location"
-                app:startIconTint="@color/text_secondary">
-
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etFromAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
-                    android:maxLines="2" />
-
+                    android:inputType="textPostalAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Spacer -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
-
-            <!-- To Address -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilToAddress"
-                style="@style/InputFieldStyle"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:hint="@string/to_address"
                 app:startIconDrawable="@drawable/ic_location"
-                app:startIconTint="@color/text_secondary">
-
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etToAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPostalAddress"
-                    android:maxLines="2" />
-
+                    android:inputType="textPostalAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Spacer -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
-
-            <!-- Moving Date -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilMovingDate"
-                style="@style/InputFieldStyle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/moving_date"
-                app:startIconDrawable="@drawable/ic_calendar"
-                app:startIconTint="@color/text_secondary">
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etMovingDate"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilMovingDate"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:inputType="none" />
+                    android:layout_weight="1"
+                    android:hint="@string/moving_date"
+                    app:startIconDrawable="@drawable/ic_calendar"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etMovingDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <Space android:layout_width="12dp" android:layout_height="match_parent" />
 
-            <!-- Spacer -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
-
-            <!-- Preferred Time -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilMovingTime"
-                style="@style/InputFieldStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/moving_time"
-                app:startIconDrawable="@drawable/ic_time"
-                app:startIconTint="@color/text_secondary">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etMovingTime"
-                    android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilMovingTime"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:inputType="none" />
+                    android:layout_weight="1"
+                    android:hint="@string/moving_time"
+                    app:startIconDrawable="@drawable/ic_time"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etMovingTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <!-- Spacer -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="16dp" />
-
-            <!-- Additional Notes -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilNotes"
-                style="@style/InputFieldStyle"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/additional_notes">
-
+                android:layout_marginTop="16dp"
+                android:hint="@string/additional_notes"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNotes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top"
-                    android:inputType="textMultiLine|textCapSentences"
+                    android:inputType="textMultiLine"
                     android:minLines="3" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Spacer -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="32dp" />
-
-            <!-- Contact Provider Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/contact_provider"
-                android:textColor="@color/text_primary"
-                android:textSize="@dimen/text_size_lg"
-                android:textStyle="bold" />
-
-            <!-- Spacer -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="12dp" />
-
-            <!-- Call and Message Buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCall"
-                    style="@style/SecondaryButton"
+                    style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/button_height"
+                    android:layout_height="56dp"
                     android:layout_weight="1"
                     android:text="@string/call"
-                    app:icon="@drawable/ic_phone"
-                    app:iconGravity="textStart" />
+                    app:icon="@drawable/ic_phone" />
 
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="match_parent" />
+                <Space android:layout_width="12dp" android:layout_height="match_parent" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnMessage"
-                    style="@style/SecondaryButton"
+                    style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="0dp"
-                    android:layout_height="@dimen/button_height"
+                    android:layout_height="56dp"
                     android:layout_weight="1"
                     android:text="@string/message"
-                    app:icon="@drawable/ic_email"
-                    app:iconGravity="textStart" />
-
+                    app:icon="@drawable/ic_email" />
             </LinearLayout>
 
-            <!-- Spacer -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="32dp" />
-
-            <!-- Confirm Booking Button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnConfirmBooking"
-                style="@style/PrimaryButton"
+                style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height"
+                android:layout_height="60dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/confirm_booking" />
 
-            <!-- Spacer -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="32dp" />
+            <View android:layout_width="match_parent" android:layout_height="48dp" />
 
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-    </LinearLayout>
-
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

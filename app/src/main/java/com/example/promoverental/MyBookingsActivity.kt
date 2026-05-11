@@ -2,7 +2,6 @@ package com.example.promoverental
 
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +15,7 @@ class MyBookingsActivity : AppCompatActivity() {
         findViewById<View>(R.id.toolbar).setOnClickListener { finish() }
 
         val rvBookings = findViewById<RecyclerView>(R.id.rvBookings)
-        val tvNoBookings = findViewById<TextView>(R.id.tvNoBookings)
+        val emptyState = findViewById<View>(R.id.emptyState)
 
         // For demo, we'll show some dummy bookings
         val bookings = listOf(
@@ -24,10 +23,10 @@ class MyBookingsActivity : AppCompatActivity() {
         )
 
         if (bookings.isEmpty()) {
-            tvNoBookings.visibility = View.VISIBLE
+            emptyState.visibility = View.VISIBLE
             rvBookings.visibility = View.GONE
         } else {
-            tvNoBookings.visibility = View.GONE
+            emptyState.visibility = View.GONE
             rvBookings.visibility = View.VISIBLE
             rvBookings.layoutManager = LinearLayoutManager(this)
             rvBookings.adapter = HouseAdapter(bookings) { }

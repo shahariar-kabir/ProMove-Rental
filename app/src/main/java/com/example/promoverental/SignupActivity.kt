@@ -26,7 +26,6 @@ class SignupActivity : AppCompatActivity() {
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnSignUp = findViewById<MaterialButton>(R.id.btnSignUp)
         val tvLogin = findViewById<TextView>(R.id.tvLogin)
-        val tabLogin = findViewById<android.view.View>(R.id.tabLogin)
 
         btnSignUp.setOnClickListener {
             val name = etFullName.text.toString().trim()
@@ -56,6 +55,5 @@ class SignupActivity : AppCompatActivity() {
         }
 
         tvLogin.setOnClickListener { goToLogin() }
-        tabLogin.setOnClickListener { goToLogin() }
     }
 }

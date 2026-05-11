@@ -1,27 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical">
+    android:background="?attr/colorSurface">
 
-    <!-- Toolbar -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/primary"
-        app:navigationIcon="@drawable/ic_back"
-        app:navigationIconTint="@color/white"
-        app:title="@string/moving_service"
-        app:titleTextColor="@color/white" />
+        android:layout_height="wrap_content"
+        app:elevation="0dp"
+        android:background="?attr/colorSurface">
 
-    <!-- Content -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_back"
+            app:title="@string/moving_service"
+            app:titleCentered="true" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -32,82 +36,58 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="@dimen/screen_padding">
+                android:padding="20dp">
 
-                <!-- Header Card -->
+                <!-- Modern Header -->
                 <com.google.android.material.card.MaterialCardView
+                    style="?attr/materialCardViewFilledStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="4dp">
+                    app:cardCornerRadius="32dp"
+                    app:cardBackgroundColor="?attr/colorPrimaryContainer">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/primary"
                         android:orientation="vertical"
-                        android:padding="24dp">
+                        android:padding="32dp"
+                        android:gravity="center">
 
                         <ImageView
                             android:layout_width="64dp"
                             android:layout_height="64dp"
-                            android:layout_gravity="center"
                             android:src="@drawable/ic_moving"
-                            android:tint="@color/white"
+                            app:tint="?attr/colorOnPrimaryContainer"
                             android:contentDescription="@string/moving_service" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="12dp"
-                            android:text="@string/moving_service"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_xl"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="4dp"
-                            android:alpha="0.9"
+                            android:layout_marginTop="16dp"
                             android:text="@string/moving_service_desc"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_md" />
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnPrimaryContainer"
+                            android:gravity="center" />
 
                     </LinearLayout>
-
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Spacer -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp" />
-
-                <!-- Section Title -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
                     android:text="@string/moving_service_providers"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_xl"
+                    android:textAppearance="?attr/textAppearanceTitleLarge"
                     android:textStyle="bold" />
 
-                <!-- Spacer -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="16dp" />
-
-                <!-- Providers RecyclerView -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvProviders"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:nestedScrollingEnabled="false"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <!-- Empty State -->
                 <LinearLayout
                     android:id="@+id/emptyState"
                     android:layout_width="match_parent"
@@ -116,25 +96,10 @@
                     android:orientation="vertical"
                     android:padding="48dp"
                     android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/ic_moving"
-                        android:tint="@color/text_hint"
-                        android:contentDescription="@string/moving_service" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/no_moving_providers"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_lg" />
-
+                    <ImageView android:layout_width="80dp" android:layout_height="80dp" android:src="@drawable/ic_moving" app:tint="?attr/colorOutlineVariant" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/no_moving_providers" android:textAppearance="?attr/textAppearanceBodyLarge" android:textColor="?attr/colorOutline" />
                 </LinearLayout>
 
-                <!-- Loading -->
                 <ProgressBar
                     android:id="@+id/progressBar"
                     android:layout_width="wrap_content"
@@ -149,4 +114,4 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

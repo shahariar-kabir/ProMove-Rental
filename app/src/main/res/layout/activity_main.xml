@@ -5,21 +5,20 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="?attr/colorSurface">
 
-    <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary">
+        app:elevation="0dp"
+        android:background="?attr/colorSurface">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:titleTextColor="@color/white">
+            app:layout_scrollFlags="scroll|enterAlways">
 
             <ImageView
                 android:layout_width="80dp"
@@ -35,30 +34,29 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/notifications"
                 android:src="@drawable/ic_notification"
-                android:tint="@color/white" />
+                app:tint="?attr/colorOnSurface" />
 
         </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Main Content -->
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/background"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:itemIconTint="@drawable/bottom_nav_color_selector"
         app:itemTextColor="@drawable/bottom_nav_color_selector"
+        app:backgroundTint="?attr/colorSurfaceContainer"
         app:labelVisibilityMode="labeled"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.App.MediumComponent"
         app:menu="@menu/bottom_nav_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

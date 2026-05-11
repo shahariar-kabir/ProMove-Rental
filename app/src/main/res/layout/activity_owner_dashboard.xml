@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="?attr/colorSurface">
 
-    <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary">
+        app:elevation="0dp"
+        android:background="?attr/colorSurface">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:title="@string/dashboard"
-            app:titleTextColor="@color/white">
+            app:title="@string/owner_dashboard"
+            app:titleCentered="true">
 
             <ImageButton
                 android:id="@+id/btnNotification"
@@ -28,13 +28,12 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/notifications"
                 android:src="@drawable/ic_notification"
-                android:tint="@color/white" />
+                app:tint="?attr/colorOnSurface" />
 
         </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Main Content -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
@@ -50,234 +49,118 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="@dimen/screen_padding">
+                android:padding="20dp">
 
-                <!-- Welcome Section -->
                 <TextView
                     android:id="@+id/tvWelcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/text_size_xl"
-                    android:textStyle="bold" />
+                    android:textAppearance="?attr/textAppearanceHeadlineSmall"
+                    android:textStyle="bold"
+                    tools:text="Hello, Kabir!" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="@string/property_overview"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_md" />
+                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textColor="?attr/colorOutline" />
 
-                <!-- Spacer -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="16dp" />
-
-                <!-- Stats Cards Row 1 -->
-                <LinearLayout
+                <!-- Grid Layout for Stats -->
+                <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="24dp"
+                    android:columnCount="2"
+                    android:rowCount="2">
 
                     <!-- Total Houses Card -->
                     <com.google.android.material.card.MaterialCardView
+                        style="?attr/materialCardViewFilledStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
+                        android:layout_columnWeight="1"
+                        android:layout_margin="6dp"
+                        app:cardCornerRadius="20dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="12dp">
-
-                            <ImageView
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
-                                android:src="@drawable/ic_home"
-                                android:tint="@color/primary"
-                                android:contentDescription="@string/total_houses" />
-
-                            <TextView
-                                android:id="@+id/tvTotalHouses"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_size_xl"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/total_houses"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="@dimen/text_size_sm" />
-
+                            android:padding="16dp">
+                            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_home" app:tint="?attr/colorPrimary" />
+                            <TextView android:id="@+id/tvTotalHouses" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textAppearance="?attr/textAppearanceHeadlineSmall" android:textStyle="bold" tools:text="12" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/total_houses" android:textAppearance="?attr/textAppearanceLabelSmall" android:textColor="?attr/colorOutline" />
                         </LinearLayout>
-
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Spacer -->
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="match_parent" />
-
-                    <!-- Available Houses Card -->
+                    <!-- Available -->
                     <com.google.android.material.card.MaterialCardView
+                        style="?attr/materialCardViewFilledStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
+                        android:layout_columnWeight="1"
+                        android:layout_margin="6dp"
+                        app:cardCornerRadius="20dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="12dp">
-
-                            <ImageView
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
-                                android:src="@drawable/ic_check_circle"
-                                android:tint="@color/success"
-                                android:contentDescription="@string/available_houses" />
-
-                            <TextView
-                                android:id="@+id/tvAvailableHouses"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_size_xl"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/available_houses"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="@dimen/text_size_sm" />
-
+                            android:padding="16dp">
+                            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_check_circle" app:tint="@color/success" />
+                            <TextView android:id="@+id/tvAvailableHouses" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textAppearance="?attr/textAppearanceHeadlineSmall" android:textStyle="bold" tools:text="5" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/available_houses" android:textAppearance="?attr/textAppearanceLabelSmall" android:textColor="?attr/colorOutline" />
                         </LinearLayout>
-
                     </com.google.android.material.card.MaterialCardView>
 
-                </LinearLayout>
+                    <!-- Rented -->
+                    <com.google.android.material.card.MaterialCardView
+                        style="?attr/materialCardViewFilledStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="6dp"
+                        app:cardCornerRadius="20dp">
 
-                <!-- Spacer -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+                            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_key" app:tint="@color/secondary" />
+                            <TextView android:id="@+id/tvRentedHouses" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textAppearance="?attr/textAppearanceHeadlineSmall" android:textStyle="bold" tools:text="7" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/rented_houses" android:textAppearance="?attr/textAppearanceLabelSmall" android:textColor="?attr/colorOutline" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
-                <!-- Stats Cards Row 2 -->
+                    <!-- Pending -->
+                    <com.google.android.material.card.MaterialCardView
+                        style="?attr/materialCardViewFilledStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="6dp"
+                        app:cardCornerRadius="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+                            <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_pending" app:tint="@color/warning" />
+                            <TextView android:id="@+id/tvPendingRequests" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textAppearance="?attr/textAppearanceHeadlineSmall" android:textStyle="bold" tools:text="3" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/pending_requests" android:textAppearance="?attr/textAppearanceLabelSmall" android:textColor="?attr/colorOutline" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                </GridLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <!-- Rented Houses Card -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="12dp">
-
-                            <ImageView
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
-                                android:src="@drawable/ic_key"
-                                android:tint="@color/secondary"
-                                android:contentDescription="@string/rented_houses" />
-
-                            <TextView
-                                android:id="@+id/tvRentedHouses"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_size_xl"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/rented_houses"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="@dimen/text_size_sm" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Spacer -->
-                    <View
-                        android:layout_width="8dp"
-                        android:layout_height="match_parent" />
-
-                    <!-- Pending Requests Card -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="2dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:padding="12dp">
-
-                            <ImageView
-                                android:layout_width="28dp"
-                                android:layout_height="28dp"
-                                android:src="@drawable/ic_pending"
-                                android:tint="@color/warning"
-                                android:contentDescription="@string/pending_requests" />
-
-                            <TextView
-                                android:id="@+id/tvPendingRequests"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:textColor="@color/text_primary"
-                                android:textSize="@dimen/text_size_xl"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/pending_requests"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="@dimen/text_size_sm" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                </LinearLayout>
-
-                <!-- Spacer -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="16dp" />
-
-                <!-- My Houses Section -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -286,65 +169,39 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/my_houses"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_lg"
+                        android:textAppearance="?attr/textAppearanceTitleLarge"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvViewAll"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
                         android:text="@string/view_all"
-                        android:textColor="@color/primary"
-                        android:textSize="@dimen/text_size_md" />
-
+                        android:textColor="?attr/colorPrimary"
+                        android:textAppearance="?attr/textAppearanceLabelLarge" />
                 </LinearLayout>
 
-                <!-- My Houses RecyclerView -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvMyHouses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:nestedScrollingEnabled="false"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <!-- Empty State -->
                 <LinearLayout
                     android:id="@+id/emptyState"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="32dp"
+                    android:padding="48dp"
                     android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:src="@drawable/ic_home"
-                        android:tint="@color/text_hint"
-                        android:contentDescription="@string/no_houses_found" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/no_houses_yet"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_md" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnAddFirstHouse"
-                        style="@style/Widget.Material3.Button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/add_new_house" />
-
+                    <ImageView android:layout_width="80dp" android:layout_height="80dp" android:src="@drawable/ic_home" app:tint="?attr/colorOutlineVariant" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/no_houses_yet" android:textAppearance="?attr/textAppearanceBodyMedium" android:textColor="?attr/colorOutline" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnAddFirstHouse" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="@string/add_new_house" />
                 </LinearLayout>
 
-                <!-- Loading -->
                 <ProgressBar
                     android:id="@+id/progressBar"
                     android:layout_width="wrap_content"
@@ -359,30 +216,26 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <!-- FAB for adding house -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddHouse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_marginEnd="16dp"
         android:layout_marginBottom="80dp"
-        android:contentDescription="@string/add_house"
-        android:src="@drawable/ic_add"
-        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
-        app:backgroundTint="@color/secondary"
-        app:tint="@color/white" />
+        android:text="@string/add_house"
+        app:icon="@drawable/ic_add"
+        app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
 
-    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/background"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
         app:itemIconTint="@drawable/bottom_nav_color_selector"
         app:itemTextColor="@drawable/bottom_nav_color_selector"
+        app:backgroundTint="?attr/colorSurfaceContainer"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/owner_nav_menu" />
 

@@ -1,13 +1,16 @@
 package com.example.promoverental
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -15,6 +18,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.promoverental.adapter.ImageSliderAdapter
 import com.example.promoverental.model.House
 import com.example.promoverental.utils.SupabaseManager
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.color.DynamicColors
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.launch
@@ -24,14 +30,19 @@ import kotlinx.serialization.json.put
 class HouseDetailsActivity : AppCompatActivity() {
 
     private var isFavorite = false
-    private lateinit var btnFavorite: View
+    private lateinit var btnFavorite: MaterialButton
     private lateinit var ivFavorite: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        DynamicColors.applyToActivityIfAvailable(this)
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_house_details)
 
         val house = intent.getSerializableExtra("house") as? House
+
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        toolbar.setNavigationOnClickListener { finish() }
 
         house?.let {
             findViewById<TextView>(R.id.tvTitle).text = it.title
@@ -70,13 +81,6 @@ class HouseDetailsActivity : AppCompatActivity() {
         }
 
         btnFavorite = findViewById(R.id.btnFavorite)
-        // Note: activity_house_details.xml has MaterialButton with id btnFavorite
-        // If it's a MaterialButton, we change icon. If we want separate icon view:
-        // Let's assume we can tint the button icon.
-
-        findViewById<View>(R.id.toolbar).setOnClickListener {
-            finish()
-        }
 
         findViewById<View>(R.id.btnBookNow).setOnClickListener {
             house?.let { h -> bookHouse(h) }
@@ -141,14 +145,12 @@ class HouseDetailsActivity : AppCompatActivity() {
     }
 
     private fun updateFavoriteUI() {
-        // Since btnFavorite is a MaterialButton in activity_house_details.xml
-        val button = btnFavorite as? com.google.android.material.button.MaterialButton
         if (isFavorite) {
-            button?.setIconResource(R.drawable.ic_favorite)
-            button?.setIconTintResource(R.color.error)
+            btnFavorite.setIconResource(R.drawable.ic_favorite)
+            btnFavorite.setIconTintResource(R.color.error)
         } else {
-            button?.setIconResource(R.drawable.ic_favorite) // or outline if you have it
-            button?.setIconTintResource(R.color.text_secondary)
+            btnFavorite.setIconResource(R.drawable.ic_favorite)
+            btnFavorite.setIconTintResource(R.color.text_secondary)
         }
     }
 
@@ -172,13 +174,14 @@ class HouseDetailsActivity : AppCompatActivity() {
     private fun setupIndicators(count: Int, container: LinearLayout) {
         container.removeAllViews()
         val indicators = arrayOfNulls<ImageView>(count)
-        val layoutParams = LinearLayout.LayoutParams(20, 20)
-        layoutParams.setMargins(8, 0, 8, 0)
         for (i in indicators.indices) {
             indicators[i] = ImageView(applicationContext)
+            val layoutParams = LinearLayout.LayoutParams(24, 24)
+            layoutParams.setMargins(8, 0, 8, 0)
             indicators[i]?.apply {
                 setImageDrawable(ContextCompat.getDrawable(applicationContext, R.drawable.bg_circle_white))
                 this.layoutParams = layoutParams
+                alpha = 0.4f
             }
             container.addView(indicators[i])
         }
@@ -189,9 +192,9 @@ class HouseDetailsActivity : AppCompatActivity() {
         for (i in 0 until childCount) {
             val imageView = container.getChildAt(i) as ImageView
             if (i == index) {
-                imageView.alpha = 1.0f
+                imageView.animate().alpha(1.0f).scaleX(1.2f).scaleY(1.2f).setDuration(200).start()
             } else {
-                imageView.alpha = 0.4f
+                imageView.animate().alpha(0.4f).scaleX(1.0f).scaleY(1.0f).setDuration(200).start()
             }
         }
     }
