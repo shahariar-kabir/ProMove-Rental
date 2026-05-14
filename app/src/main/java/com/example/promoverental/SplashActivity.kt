@@ -1,11 +1,9 @@
 package com.example.promoverental
 
 import android.content.Intent
-import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.promoverental.utils.SupabaseManager
 import io.github.jan.supabase.auth.auth
@@ -14,9 +12,6 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
-
-        val ivSplashAnim = findViewById<ImageView>(R.id.ivSplashAnim)
-        (ivSplashAnim.drawable as? Animatable)?.start()
 
         Handler(Looper.getMainLooper()).postDelayed({
             checkUserSession()
