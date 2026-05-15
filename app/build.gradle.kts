@@ -45,6 +45,9 @@ dependencies {
     // Image Loading
     implementation("io.coil-kt:coil:2.6.0")
     
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
+    implementation("androidx.preference:preference-ktx:1.2.1")
+    
     // Supabase
     implementation(libs.bundles.supabase)
     implementation(libs.bundles.ktor)

@@ -228,6 +228,20 @@
                 android:layout_marginTop="16dp"
                 app:chipSpacingHorizontal="8dp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/location"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:textStyle="bold" />
+
+            <org.osmdroid.views.MapView
+                android:id="@+id/mapview"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginTop="16dp" />
+
             <!-- Owner Section -->
             <com.google.android.material.card.MaterialCardView
                 style="?attr/materialCardViewElevatedStyle"

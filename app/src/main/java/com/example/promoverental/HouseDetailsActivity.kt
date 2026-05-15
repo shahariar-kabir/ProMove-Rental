@@ -1,11 +1,9 @@
 package com.example.promoverental
 
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.view.animation.DecelerateInterpolator
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -14,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.preference.PreferenceManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.promoverental.adapter.ImageSliderAdapter
 import com.example.promoverental.model.House
@@ -26,23 +25,38 @@ import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 
 class HouseDetailsActivity : AppCompatActivity() {
 
     private var isFavorite = false
     private lateinit var btnFavorite: MaterialButton
-    private lateinit var ivFavorite: ImageView
+    private var house: House? = null
+    private lateinit var map: MapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         DynamicColors.applyToActivityIfAvailable(this)
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        
+        // OSM Configuration
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this))
+        
         setContentView(R.layout.activity_house_details)
 
-        val house = intent.getSerializableExtra("house") as? House
+        house = intent.getSerializableExtra("house") as? House
 
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         toolbar.setNavigationOnClickListener { finish() }
+
+        // Initialize Map
+        map = findViewById(R.id.mapview)
+        map.setTileSource(TileSourceFactory.MAPNIK)
+        map.setMultiTouchControls(true)
 
         house?.let {
             findViewById<TextView>(R.id.tvTitle).text = it.title
@@ -76,6 +90,18 @@ class HouseDetailsActivity : AppCompatActivity() {
                 })
             }
 
+            // Setup Map Location
+            val startPoint = GeoPoint(it.latitude, it.longitude)
+            val mapController = map.controller
+            mapController.setZoom(17.5)
+            mapController.setCenter(startPoint)
+
+            val startMarker = Marker(map)
+            startMarker.position = startPoint
+            startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            startMarker.title = it.title
+            map.overlays.add(startMarker)
+
             // Check if favorite
             checkFavoriteStatus(it.id ?: "")
         }
@@ -95,6 +121,16 @@ class HouseDetailsActivity : AppCompatActivity() {
             intent.data = Uri.parse("tel:+8801234567890")
             startActivity(intent)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        map.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        map.onPause()
     }
 
     private fun checkFavoriteStatus(houseId: String) {
