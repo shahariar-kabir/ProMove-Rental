@@ -159,6 +159,21 @@
                     android:inputType="textPostalAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <org.osmdroid.views.MapView
+                android:id="@+id/mapview"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="12dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap on map to set exact location"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="?attr/colorOutline"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp" />
+
             <!-- Row: Beds/Baths -->
             <LinearLayout
                 android:layout_width="match_parent"

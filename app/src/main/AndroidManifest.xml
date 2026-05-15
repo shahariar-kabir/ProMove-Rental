@@ -47,6 +47,8 @@
         <activity android:name=".FullScreenImageActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".MyBookingsActivity" />
+        <activity android:name=".ChatActivity" />
+        <activity android:name=".NotificationActivity" />
     </application>
 
 </manifest>

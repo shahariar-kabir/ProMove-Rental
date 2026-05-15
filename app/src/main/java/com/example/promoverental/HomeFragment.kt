@@ -7,38 +7,51 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.promoverental.adapter.FeaturedHouseAdapter
 import com.example.promoverental.adapter.HouseAdapter
 import com.example.promoverental.model.House
 import com.example.promoverental.utils.SupabaseManager
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.button.MaterialButton
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.launch
+import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
-class HomeFragment : Fragment(), OnMapReadyCallback {
+class HomeFragment : Fragment() {
 
-    private lateinit var mapView: MapView
-    private var googleMap: GoogleMap? = null
+    private lateinit var map: MapView
     private lateinit var houseAdapter: HouseAdapter
+    private lateinit var locationOverlay: MyLocationNewOverlay
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // OSM Configuration
+        Configuration.getInstance().load(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()))
+        
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         // Initialize Map
-        mapView = view.findViewById(R.id.mapView)
-        mapView.onCreate(savedInstanceState)
-        mapView.getMapAsync(this)
+        map = view.findViewById(R.id.mapview)
+        map.setTileSource(TileSourceFactory.MAPNIK)
+        map.setMultiTouchControls(true)
+        map.controller.setZoom(12.0)
+        map.controller.setCenter(GeoPoint(23.8103, 90.4125))
+
+        // Setup My Location Overlay
+        locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map)
+        locationOverlay.enableMyLocation()
+        locationOverlay.enableFollowLocation() // Optional: follow user as they move
+        map.overlays.add(locationOverlay)
 
         // Initialize RecyclerView
         val rvTopRentals = view.findViewById<RecyclerView>(R.id.rvTopRentals)
@@ -54,10 +67,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         )
         rvTopRentals.adapter = houseAdapter
 
-        // Initialize Featured Houses
-        val rvFeaturedHouses = view.findViewById<RecyclerView>(R.id.rvFeaturedHouses)
-        rvFeaturedHouses.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        
         // Fetch Data from Supabase
         fetchHouses()
 
@@ -66,19 +75,26 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             startActivity(Intent(context, MovingServiceActivity::class.java))
         }
 
+        view.findViewById<View>(R.id.searchBar).setOnClickListener {
+            (activity as? MainActivity)?.findViewById<View>(R.id.nav_search)?.performClick()
+        }
+
+        view.findViewById<View>(R.id.btnNotification).setOnClickListener {
+            startActivity(Intent(context, NotificationActivity::class.java))
+        }
+
         return view
     }
 
     private fun fetchHouses() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             try {
-                // select * from houses
                 val houses = SupabaseManager.client.postgrest["houses"]
                     .select().decodeList<House>()
                 
                 houseAdapter.updateData(houses)
                 
-                // Update Featured Houses (shuffled)
+                // Update Featured Houses
                 val rvFeatured = view?.findViewById<RecyclerView>(R.id.rvFeaturedHouses)
                 if (rvFeatured != null && isAdded) {
                     rvFeatured.adapter = FeaturedHouseAdapter(houses.shuffled()) { house ->
@@ -89,22 +105,31 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 }
 
                 // Add markers to map
-                if (googleMap != null) {
-                    houses.forEach { house ->
-                        val location = LatLng(house.latitude, house.longitude)
-                        googleMap?.addMarker(
-                            MarkerOptions()
-                                .position(location)
-                                .title(house.title)
-                                .snippet(house.price)
-                        )
-                    }
-                }
+                updateMapMarkers(houses)
+
             } catch (e: Exception) {
-                // Fallback to sample data if database table is not ready
                 loadSampleData()
             }
         }
+    }
+
+    private fun updateMapMarkers(houses: List<House>) {
+        map.overlays.clear()
+        for (house in houses) {
+            val marker = Marker(map)
+            marker.position = GeoPoint(house.latitude, house.longitude)
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            marker.title = house.title
+            marker.snippet = house.price
+            marker.setOnMarkerClickListener { _, _ ->
+                val intent = Intent(context, HouseDetailsActivity::class.java)
+                intent.putExtra("house", house)
+                startActivity(intent)
+                true
+            }
+            map.overlays.add(marker)
+        }
+        map.invalidate()
     }
 
     private fun loadSampleData() {
@@ -114,31 +139,16 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
         )
         houseAdapter.updateData(sampleHouses)
         view?.findViewById<RecyclerView>(R.id.rvFeaturedHouses)?.adapter = FeaturedHouseAdapter(sampleHouses) { _ -> }
-    }
-
-    override fun onMapReady(map: GoogleMap) {
-        googleMap = map
-        val dhaka = LatLng(23.8103, 90.4125)
-        googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(dhaka, 11f))
+        updateMapMarkers(sampleHouses)
     }
 
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+        map.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.onDestroy()
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView.onLowMemory()
+        map.onPause()
     }
 }

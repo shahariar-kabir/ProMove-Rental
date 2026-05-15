@@ -19,6 +19,7 @@ import com.example.promoverental.model.House
 import com.example.promoverental.utils.SupabaseManager
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.color.DynamicColors
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
@@ -34,7 +35,7 @@ import org.osmdroid.views.overlay.Marker
 class HouseDetailsActivity : AppCompatActivity() {
 
     private var isFavorite = false
-    private lateinit var btnFavorite: MaterialButton
+    private lateinit var btnFavorite: FloatingActionButton
     private var house: House? = null
     private lateinit var map: MapView
 
@@ -121,6 +122,13 @@ class HouseDetailsActivity : AppCompatActivity() {
             intent.data = Uri.parse("tel:+8801234567890")
             startActivity(intent)
         }
+
+        findViewById<View>(R.id.btnMessageOwner).setOnClickListener {
+            val intent = Intent(this, ChatActivity::class.java)
+            intent.putExtra("receiver_id", house?.ownerId)
+            intent.putExtra("owner_name", "House Owner")
+            startActivity(intent)
+        }
     }
 
     override fun onResume() {
@@ -182,11 +190,11 @@ class HouseDetailsActivity : AppCompatActivity() {
 
     private fun updateFavoriteUI() {
         if (isFavorite) {
-            btnFavorite.setIconResource(R.drawable.ic_favorite)
-            btnFavorite.setIconTintResource(R.color.error)
+            btnFavorite.setImageResource(R.drawable.ic_favorite)
+            btnFavorite.imageTintList = ContextCompat.getColorStateList(this, R.color.error)
         } else {
-            btnFavorite.setIconResource(R.drawable.ic_favorite)
-            btnFavorite.setIconTintResource(R.color.text_secondary)
+            btnFavorite.setImageResource(R.drawable.ic_favorite)
+            btnFavorite.imageTintList = ContextCompat.getColorStateList(this, R.color.text_secondary)
         }
     }
 

@@ -6,10 +6,38 @@
     android:layout_height="match_parent"
     android:background="?attr/colorSurface">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp"
+        android:background="?attr/colorSurface">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/app_name"
+            app:titleCentered="false">
+
+            <ImageButton
+                android:id="@+id/btnNotification"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_notification"
+                android:contentDescription="@string/notifications"
+                app:tint="?attr/colorOnSurface" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/find_next_home"
                 android:textAppearance="?attr/textAppearanceHeadlineMedium"
                 android:textColor="?attr/colorOnSurface"
@@ -30,6 +58,7 @@
 
             <!-- Search Bar (M3 Search Bar Style) -->
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/searchBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
@@ -84,7 +113,7 @@
 
             </LinearLayout>
 
-            <!-- Map View Card -->
+            <!-- Map View Card (OSM) -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
@@ -94,8 +123,8 @@
                 app:cardElevation="0dp"
                 app:strokeWidth="0dp">
 
-                <com.google.android.gms.maps.MapView
-                    android:id="@+id/mapView"
+                <org.osmdroid.views.MapView
+                    android:id="@+id/mapview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 

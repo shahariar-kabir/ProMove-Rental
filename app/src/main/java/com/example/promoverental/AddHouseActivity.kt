@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.promoverental.adapter.SelectedImageAdapter
@@ -20,6 +21,13 @@ import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.osmdroid.config.Configuration
+import org.osmdroid.events.MapEventsReceiver
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
+import org.osmdroid.views.overlay.Marker
 import java.util.UUID
 
 class AddHouseActivity : AppCompatActivity() {
@@ -31,6 +39,10 @@ class AddHouseActivity : AppCompatActivity() {
     private lateinit var btnPublish: MaterialButton
     private var isEditMode = false
     private var houseToEdit: House? = null
+    
+    private lateinit var map: MapView
+    private var selectedLocation: GeoPoint = GeoPoint(23.8103, 90.4125)
+    private var locationMarker: Marker? = null
 
     private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
         if (uris.isNotEmpty()) {
@@ -41,6 +53,10 @@ class AddHouseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // OSM Configuration
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this))
+        
         setContentView(R.layout.activity_add_house)
 
         val etTitle = findViewById<EditText>(R.id.etTitle)
@@ -54,6 +70,22 @@ class AddHouseActivity : AppCompatActivity() {
         btnAddPhoto = findViewById(R.id.btnAddPhoto)
         btnPublish = findViewById(R.id.btnPublish)
         val rvImages = findViewById<RecyclerView>(R.id.rvImages)
+
+        // Map Setup
+        map = findViewById(R.id.mapview)
+        map.setTileSource(TileSourceFactory.MAPNIK)
+        map.setMultiTouchControls(true)
+        map.controller.setZoom(12.0)
+        map.controller.setCenter(selectedLocation)
+
+        val eventsReceiver = object : MapEventsReceiver {
+            override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
+                updateLocation(p)
+                return true
+            }
+            override fun longPressHelper(p: GeoPoint): Boolean = false
+        }
+        map.overlays.add(MapEventsOverlay(eventsReceiver))
 
         // Check if we are in Edit Mode
         houseToEdit = intent.getSerializableExtra("house") as? House
@@ -71,9 +103,11 @@ class AddHouseActivity : AppCompatActivity() {
             etBathrooms.setText(houseToEdit?.bathrooms.toString())
             etArea.setText(houseToEdit?.area)
             existingImageUrls = houseToEdit?.imageUrls?.toMutableList() ?: mutableListOf()
+            
+            updateLocation(GeoPoint(houseToEdit!!.latitude, houseToEdit!!.longitude))
         }
 
-        // Image Preview (For new selections only in this simple version)
+        // Image Preview
         imageAdapter = SelectedImageAdapter(selectedImages) { position ->
             selectedImages.removeAt(position)
             imageAdapter.notifyDataSetChanged()
@@ -101,13 +135,20 @@ class AddHouseActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (!isEditMode && selectedImages.isEmpty()) {
-                Toast.makeText(this, "Select at least one image", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
             publishHouse(title, description, price, location, bedrooms, bathrooms, area)
         }
+    }
+
+    private fun updateLocation(p: GeoPoint) {
+        selectedLocation = p
+        if (locationMarker == null) {
+            locationMarker = Marker(map)
+            locationMarker?.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            map.overlays.add(locationMarker)
+        }
+        locationMarker?.position = p
+        map.controller.animateTo(p)
+        map.invalidate()
     }
 
     private fun publishHouse(title: String, description: String, price: String, location: String, bedrooms: Int, bathrooms: Int, area: String) {
@@ -119,11 +160,9 @@ class AddHouseActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             try {
-                // 1. Upload new images
                 val newUrls = uploadAllImages()
                 val allUrls = existingImageUrls + newUrls
 
-                // 2. Prepare Data
                 val house = House(
                     id = houseToEdit?.id ?: UUID.randomUUID().toString(),
                     title = title,
@@ -134,17 +173,17 @@ class AddHouseActivity : AppCompatActivity() {
                     bathrooms = bathrooms,
                     area = area,
                     imageUrls = allUrls,
-                    ownerId = user.id
+                    ownerId = user.id,
+                    latitude = selectedLocation.latitude,
+                    longitude = selectedLocation.longitude
                 )
 
                 if (isEditMode) {
                     SupabaseManager.client.postgrest["houses"].update(house) {
                         filter { eq("id", house.id ?: "") }
                     }
-                    Toast.makeText(this@AddHouseActivity, "House updated successfully!", Toast.LENGTH_LONG).show()
                 } else {
                     SupabaseManager.client.postgrest["houses"].insert(house)
-                    Toast.makeText(this@AddHouseActivity, "House published successfully!", Toast.LENGTH_LONG).show()
                 }
                 finish()
             } catch (e: Exception) {
@@ -170,5 +209,15 @@ class AddHouseActivity : AppCompatActivity() {
             } catch (e: Exception) { }
         }
         return@withContext uploadedUrls
+    }
+
+    override fun onResume() {
+        super.onResume()
+        map.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        map.onPause()
     }
 }
