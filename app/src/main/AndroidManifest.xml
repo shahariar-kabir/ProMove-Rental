@@ -52,6 +52,7 @@
         <activity android:name=".BookingRequestsActivity" />
         <activity android:name=".InboxActivity" />
         <activity android:name=".MyHousesActivity" />
+        <activity android:name=".FullScreenMapActivity" />
     </application>
 
 </manifest>

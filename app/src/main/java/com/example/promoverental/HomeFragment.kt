@@ -82,6 +82,12 @@ class HomeFragment : Fragment() {
             (activity as? MainActivity)?.findViewById<View>(R.id.nav_search)?.performClick()
         }
 
+        view.findViewById<View>(R.id.btnFullScreenMap).setOnClickListener {
+            val intent = Intent(context, FullScreenMapActivity::class.java)
+            intent.putExtra("mode", "view_all")
+            startActivity(intent)
+        }
+
         return view
     }
 

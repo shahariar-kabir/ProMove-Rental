@@ -106,6 +106,13 @@ class HouseDetailsActivity : AppCompatActivity() {
             startMarker.title = it.title
             map.overlays.add(startMarker)
 
+            findViewById<View>(R.id.btnFullScreenMap).setOnClickListener {
+                val intent = Intent(this, FullScreenMapActivity::class.java)
+                intent.putExtra("mode", "view_single")
+                intent.putExtra("house", house)
+                startActivity(intent)
+            }
+
             // Check if favorite
             checkFavoriteStatus(it.id ?: "")
         }

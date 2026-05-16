@@ -1,5 +1,6 @@
 package com.example.promoverental
 
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -18,7 +19,7 @@ import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
-import kotlin.time.Duration.Companion.minutes
+import java.util.Locale
 
 class EditProfileActivity : AppCompatActivity() {
 
@@ -46,10 +47,11 @@ class EditProfileActivity : AppCompatActivity() {
         val btnSave = findViewById<MaterialButton>(R.id.btnSave)
         val btnChangePhoto = findViewById<View>(R.id.btnChangePhoto)
 
-        // Load existing data from Profile Table
+        // Fetch user once
         val user = SupabaseManager.client.auth.currentUserOrNull()
-        user?.let {
-            etEmail.setText(it.email)
+        
+        if (user != null) {
+            etEmail.setText(user.email)
             lifecycleScope.launch {
                 try {
                     val profile = SupabaseManager.client.postgrest["profiles"]
@@ -71,14 +73,7 @@ class EditProfileActivity : AppCompatActivity() {
                             }
                         }
                     }
-                } catch (e: Exception) {
-                    // Fallback to metadata if table fetch fails
-                    val metadata = it.userMetadata
-                    etFullName.setText(metadata?.get("full_name")?.toString()?.replace("\"", ""))
-                    etPhone.setText(metadata?.get("phone")?.toString()?.replace("\"", ""))
-                    etAddress.setText(metadata?.get("location")?.toString()?.replace("\"", ""))
-                    etBio.setText(metadata?.get("bio")?.toString()?.replace("\"", ""))
-                }
+                } catch (e: Exception) { }
             }
         }
 
@@ -101,45 +96,41 @@ class EditProfileActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Check session again right before saving
+            val currentUser = SupabaseManager.client.auth.currentUserOrNull()
+            if (currentUser == null) {
+                Toast.makeText(this, "Session expired. Please login again.", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
             lifecycleScope.launch {
                 try {
                     var finalAvatarUrl: String? = null
                     
-                    // Fetch existing avatar url from profile first
-                    val existingProfile = SupabaseManager.client.postgrest["profiles"]
-                        .select { filter { eq("id", user?.id ?: "") } }
+                    // Fetch existing profile to keep old image if no new one selected
+                    val existing = SupabaseManager.client.postgrest["profiles"]
+                        .select { filter { eq("id", currentUser.id) } }
                         .decodeSingleOrNull<com.example.promoverental.model.Profile>()
-                    finalAvatarUrl = existingProfile?.avatarUrl
+                    finalAvatarUrl = existing?.avatarUrl
 
-                    // Upload image if selected
+                    // Upload new image if selected
                     selectedImageUri?.let { uri ->
                         val bytes = contentResolver.openInputStream(uri)?.readBytes()
                         if (bytes != null) {
-                            val fileName = "avatars/${user?.id}_${System.currentTimeMillis()}.jpg"
+                            val fileName = "${currentUser.id}.jpg" 
                             val bucket = SupabaseManager.client.storage.from("avatars")
-                            bucket.upload(fileName, bytes) {
-                                upsert = true
+                            try {
+                                bucket.upload(fileName, bytes) { upsert = true }
+                            } catch (e: Exception) {
+                                bucket.update(fileName, bytes) { upsert = true }
                             }
                             finalAvatarUrl = bucket.publicUrl(fileName)
                         }
                     }
 
-                    // Update User Metadata (Auth)
-                    SupabaseManager.client.auth.updateUser {
-                        data = buildJsonObject {
-                            put("full_name", name)
-                            put("phone", phone)
-                            put("location", address)
-                            put("bio", bio)
-                            if (finalAvatarUrl != null) {
-                                put("avatar_url", finalAvatarUrl!!)
-                            }
-                        }
-                    }
-
                     // Update Profiles Table
                     val profileData = buildJsonObject {
-                        put("id", user?.id)
+                        put("id", currentUser.id)
                         put("full_name", name)
                         put("phone", phone)
                         put("location", address)

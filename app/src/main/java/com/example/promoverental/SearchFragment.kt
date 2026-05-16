@@ -34,6 +34,7 @@ class SearchFragment : Fragment() {
     private lateinit var rvSearchResults: RecyclerView
     private lateinit var map: MapView
     private lateinit var btnToggleView: MaterialButton
+    private lateinit var btnFullScreenMap: View
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,6 +46,7 @@ class SearchFragment : Fragment() {
         rvSearchResults = view.findViewById(R.id.rvSearchResults)
         map = view.findViewById(R.id.mapview)
         btnToggleView = view.findViewById(R.id.btnToggleView)
+        btnFullScreenMap = view.findViewById(R.id.btnFullScreenMap)
         val etSearch = view.findViewById<EditText>(R.id.etSearch)
 
         rvSearchResults.layoutManager = LinearLayoutManager(context)
@@ -64,6 +66,12 @@ class SearchFragment : Fragment() {
         map.controller.setCenter(GeoPoint(23.8103, 90.4125))
 
         btnToggleView.setOnClickListener { toggleView() }
+
+        btnFullScreenMap.setOnClickListener {
+            val intent = Intent(context, FullScreenMapActivity::class.java)
+            intent.putExtra("mode", "view_all")
+            startActivity(intent)
+        }
 
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -108,10 +116,12 @@ class SearchFragment : Fragment() {
         if (isMapView) {
             rvSearchResults.visibility = View.GONE
             map.visibility = View.VISIBLE
+            btnFullScreenMap.visibility = View.VISIBLE
             btnToggleView.setIconResource(R.drawable.ic_search)
         } else {
             rvSearchResults.visibility = View.VISIBLE
             map.visibility = View.GONE
+            btnFullScreenMap.visibility = View.GONE
             btnToggleView.setIconResource(R.drawable.ic_location)
         }
     }

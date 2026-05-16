@@ -65,11 +65,28 @@
                 android:clipToPadding="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-            <org.osmdroid.views.MapView
-                android:id="@+id/mapview"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
+                android:layout_height="match_parent">
+
+                <org.osmdroid.views.MapView
+                    android:id="@+id/mapview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/btnFullScreenMap"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/bg_circle_white"
+                    android:src="@drawable/ic_location"
+                    android:contentDescription="Full Screen"
+                    android:visibility="gone"
+                    app:tint="?attr/colorPrimary" />
+            </FrameLayout>
 
         </FrameLayout>
 
