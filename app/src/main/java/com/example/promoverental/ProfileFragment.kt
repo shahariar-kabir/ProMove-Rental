@@ -11,9 +11,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import coil.load
+import com.example.promoverental.model.Profile
 import com.example.promoverental.utils.SupabaseManager
 import com.google.android.material.button.MaterialButton
 import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -92,24 +94,32 @@ class ProfileFragment : Fragment() {
     }
 
     private fun loadUserProfile() {
-        val user = SupabaseManager.client.auth.currentUserOrNull()
-        user?.let {
-            val metadata = it.userMetadata
-            val name = metadata?.get("full_name")?.toString()?.replace("\"", "") ?: "User"
-            val email = it.email ?: ""
-            val avatarUrl = metadata?.get("avatar_url")?.toString()?.replace("\"", "")
+        val user = SupabaseManager.client.auth.currentUserOrNull() ?: return
+        tvEmail.text = user.email
 
-            tvName.text = name
-            tvEmail.text = email
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val profile = SupabaseManager.client.postgrest["profiles"]
+                    .select { filter { eq("id", user.id) } }
+                    .decodeSingleOrNull<Profile>()
 
-            if (!avatarUrl.isNullOrEmpty()) {
-                ivProfile.load(avatarUrl) {
-                    crossfade(true)
-                    placeholder(R.drawable.logo)
-                    error(R.drawable.logo)
+                profile?.let { p ->
+                    tvName.text = p.fullName ?: "User"
+
+                    if (!p.avatarUrl.isNullOrEmpty()) {
+                        ivProfile.load(p.avatarUrl) {
+                            crossfade(true)
+                            placeholder(R.drawable.logo)
+                            error(R.drawable.logo)
+                        }
+                    } else {
+                        ivProfile.setImageResource(R.drawable.logo)
+                    }
                 }
-            } else {
-                ivProfile.setImageResource(R.drawable.logo)
+            } catch (e: Exception) {
+                // Fallback to metadata if DB fails
+                val metadata = user.userMetadata
+                tvName.text = metadata?.get("full_name")?.toString()?.replace("\"", "") ?: "User"
             }
         }
     }
