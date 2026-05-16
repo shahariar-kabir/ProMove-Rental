@@ -23,6 +23,7 @@ class HouseAdapter(
         val tvTitle: TextView = view.findViewById(R.id.tvTitle)
         val tvPrice: TextView = view.findViewById(R.id.tvPrice)
         val tvArea: TextView = view.findViewById(R.id.tvArea)
+        val tvStatus: TextView = view.findViewById(R.id.tvStatus)
         val ownerActions: View = view.findViewById(R.id.ownerActions)
         val btnEdit: View = view.findViewById(R.id.btnEdit)
         val btnDelete: View = view.findViewById(R.id.btnDelete)
@@ -51,10 +52,17 @@ class HouseAdapter(
 
         // Owner functionality
         if (isOwner) {
+            holder.tvStatus.visibility = View.VISIBLE
+            holder.tvStatus.text = house.status
+            holder.tvStatus.setTextColor(
+                if (house.status == "available") context.getColor(R.color.success) 
+                else context.getColor(R.color.secondary)
+            )
             holder.ownerActions.visibility = View.VISIBLE
             holder.btnEdit.setOnClickListener { onEditClick?.invoke(house) }
             holder.btnDelete.setOnClickListener { onDeleteClick?.invoke(house) }
         } else {
+            holder.tvStatus.visibility = View.GONE
             holder.ownerActions.visibility = View.GONE
         }
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
@@ -13,8 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.promoverental.adapter.FeaturedHouseAdapter
 import com.example.promoverental.adapter.HouseAdapter
 import com.example.promoverental.model.House
+import com.example.promoverental.model.Message
 import com.example.promoverental.utils.SupabaseManager
 import com.google.android.material.button.MaterialButton
+import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.coroutines.launch
 import org.osmdroid.config.Configuration
@@ -35,25 +38,19 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // OSM Configuration
         Configuration.getInstance().load(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()))
-        
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        // Initialize Map
         map = view.findViewById(R.id.mapview)
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.setMultiTouchControls(true)
         map.controller.setZoom(12.0)
         map.controller.setCenter(GeoPoint(23.8103, 90.4125))
 
-        // Setup My Location Overlay
         locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(requireContext()), map)
         locationOverlay.enableMyLocation()
-        locationOverlay.enableFollowLocation() // Optional: follow user as they move
         map.overlays.add(locationOverlay)
 
-        // Initialize RecyclerView
         val rvTopRentals = view.findViewById<RecyclerView>(R.id.rvTopRentals)
         rvTopRentals.layoutManager = LinearLayoutManager(context)
         
@@ -67,20 +64,27 @@ class HomeFragment : Fragment() {
         )
         rvTopRentals.adapter = houseAdapter
 
-        // Fetch Data from Supabase
         fetchHouses()
 
-        // Buttons
         view.findViewById<MaterialButton>(R.id.btnShifting).setOnClickListener {
             startActivity(Intent(context, MovingServiceActivity::class.java))
         }
 
-        view.findViewById<View>(R.id.searchBar).setOnClickListener {
-            (activity as? MainActivity)?.findViewById<View>(R.id.nav_search)?.performClick()
-        }
-
         view.findViewById<View>(R.id.btnNotification).setOnClickListener {
             startActivity(Intent(context, NotificationActivity::class.java))
+        }
+
+        val btnInbox = view.findViewById<View>(R.id.btnMessages)
+        btnInbox.setOnClickListener {
+            startActivity(Intent(context, InboxActivity::class.java))
+        }
+        
+        view.findViewById<View>(R.id.btnMessagesContainer).setOnClickListener {
+            btnInbox.performClick()
+        }
+
+        view.findViewById<View>(R.id.searchBar).setOnClickListener {
+            (activity as? MainActivity)?.findViewById<View>(R.id.nav_search)?.performClick()
         }
 
         return view
@@ -89,23 +93,23 @@ class HomeFragment : Fragment() {
     private fun fetchHouses() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                val houses = SupabaseManager.client.postgrest["houses"]
+                val response = SupabaseManager.client.postgrest["houses"]
                     .select().decodeList<House>()
                 
-                houseAdapter.updateData(houses)
+                val availableHouses = response.filter { it.status == "available" || it.status.isEmpty() }
                 
-                // Update Featured Houses
+                houseAdapter.updateData(availableHouses)
+                
                 val rvFeatured = view?.findViewById<RecyclerView>(R.id.rvFeaturedHouses)
                 if (rvFeatured != null && isAdded) {
-                    rvFeatured.adapter = FeaturedHouseAdapter(houses.shuffled()) { house ->
+                    rvFeatured.adapter = FeaturedHouseAdapter(availableHouses.shuffled()) { house ->
                         val intent = Intent(context, HouseDetailsActivity::class.java)
                         intent.putExtra("house", house)
                         startActivity(intent)
                     }
                 }
 
-                // Add markers to map
-                updateMapMarkers(houses)
+                updateMapMarkers(availableHouses)
 
             } catch (e: Exception) {
                 loadSampleData()
@@ -115,6 +119,7 @@ class HomeFragment : Fragment() {
 
     private fun updateMapMarkers(houses: List<House>) {
         map.overlays.clear()
+        map.overlays.add(locationOverlay)
         for (house in houses) {
             val marker = Marker(map)
             marker.position = GeoPoint(house.latitude, house.longitude)
@@ -145,6 +150,32 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         map.onResume()
+        fetchHouses()
+        loadUnreadMessageCount()
+    }
+
+    private fun loadUnreadMessageCount() {
+        val userId = SupabaseManager.client.auth.currentUserOrNull()?.id ?: return
+        val tvBadge = view?.findViewById<TextView>(R.id.tvMessageBadge) ?: return
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                val count = SupabaseManager.client.postgrest["messages"]
+                    .select {
+                        filter {
+                            eq("receiver_id", userId)
+                            eq("is_read", false)
+                        }
+                    }.decodeList<Message>().size
+
+                if (count > 0) {
+                    tvBadge.visibility = View.VISIBLE
+                    tvBadge.text = if (count > 99) "99+" else count.toString()
+                } else {
+                    tvBadge.visibility = View.GONE
+                }
+            } catch (e: Exception) { }
+        }
     }
 
     override fun onPause() {

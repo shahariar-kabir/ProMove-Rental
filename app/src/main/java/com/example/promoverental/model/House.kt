@@ -17,5 +17,6 @@ data class House(
     @SerialName("owner_id") val ownerId: String = "",
     val type: String = "Apartment",
     val latitude: Double = 23.8103,
-    val longitude: Double = 90.4125
+    val longitude: Double = 90.4125,
+    val status: String = "available" // available, rented
 ) : java.io.Serializable

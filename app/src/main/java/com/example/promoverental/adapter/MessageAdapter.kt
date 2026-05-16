@@ -41,6 +41,8 @@ class MessageAdapter(private val currentUserId: String) : RecyclerView.Adapter<R
 
     override fun getItemCount(): Int = messages.size
 
+    fun getMessages(): List<Message> = messages
+
     fun setMessages(newMessages: List<Message>) {
         messages.clear()
         messages.addAll(newMessages)

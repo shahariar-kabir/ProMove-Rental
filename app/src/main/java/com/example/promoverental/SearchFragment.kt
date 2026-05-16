@@ -39,9 +39,7 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // OSM Configuration
         Configuration.getInstance().load(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()))
-        
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
         rvSearchResults = view.findViewById(R.id.rvSearchResults)
@@ -49,7 +47,6 @@ class SearchFragment : Fragment() {
         btnToggleView = view.findViewById(R.id.btnToggleView)
         val etSearch = view.findViewById<EditText>(R.id.etSearch)
 
-        // Setup List
         rvSearchResults.layoutManager = LinearLayoutManager(context)
         houseAdapter = HouseAdapter(
             houses = emptyList(),
@@ -61,15 +58,12 @@ class SearchFragment : Fragment() {
         )
         rvSearchResults.adapter = houseAdapter
 
-        // Setup Map
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.setMultiTouchControls(true)
         map.controller.setZoom(12.0)
-        map.controller.setCenter(GeoPoint(23.8103, 90.4125)) // Dhaka Default
+        map.controller.setCenter(GeoPoint(23.8103, 90.4125))
 
-        btnToggleView.setOnClickListener {
-            toggleView()
-        }
+        btnToggleView.setOnClickListener { toggleView() }
 
         etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -80,15 +74,19 @@ class SearchFragment : Fragment() {
         })
 
         fetchHouses()
-
         return view
     }
 
     private fun fetchHouses() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                allHouses = SupabaseManager.client.postgrest["houses"]
+                // Fetch all houses first to ensure we see everything
+                val response = SupabaseManager.client.postgrest["houses"]
                     .select().decodeList<House>()
+                
+                // Filter locally: show available or those with no status set yet (old data)
+                allHouses = response.filter { it.status == "available" || it.status.isEmpty() }
+                
                 houseAdapter.updateData(allHouses)
                 updateMapMarkers(allHouses)
             } catch (e: Exception) {
@@ -120,15 +118,13 @@ class SearchFragment : Fragment() {
 
     private fun updateMapMarkers(houses: List<House>) {
         map.overlays.clear()
-        if (houses.isEmpty()) return
-
         for (house in houses) {
             val marker = Marker(map)
             marker.position = GeoPoint(house.latitude, house.longitude)
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = house.title
             marker.snippet = house.price
-            marker.setOnMarkerClickListener { m, _ ->
+            marker.setOnMarkerClickListener { _, _ ->
                 val intent = Intent(context, HouseDetailsActivity::class.java)
                 intent.putExtra("house", house)
                 startActivity(intent)
@@ -136,10 +132,8 @@ class SearchFragment : Fragment() {
             }
             map.overlays.add(marker)
         }
-        
-        if (houses.isNotEmpty()) {
-            val firstHouse = houses.first()
-            map.controller.animateTo(GeoPoint(firstHouse.latitude, firstHouse.longitude))
+        if (houses.isNotEmpty() && isMapView) {
+            map.controller.animateTo(GeoPoint(houses.first().latitude, houses.first().longitude))
         }
         map.invalidate()
     }
@@ -147,6 +141,7 @@ class SearchFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         map.onResume()
+        fetchHouses() // Refresh data when returning to fragment
     }
 
     override fun onPause() {

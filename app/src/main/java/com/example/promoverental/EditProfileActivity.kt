@@ -13,6 +13,7 @@ import coil.load
 import com.example.promoverental.utils.SupabaseManager
 import com.google.android.material.button.MaterialButton
 import io.github.jan.supabase.auth.auth
+import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonObject
@@ -93,7 +94,7 @@ class EditProfileActivity : AppCompatActivity() {
                         }
                     }
 
-                    // Update User Metadata
+                    // Update User Metadata (Auth)
                     SupabaseManager.client.auth.updateUser {
                         data = buildJsonObject {
                             put("full_name", name)
@@ -105,6 +106,16 @@ class EditProfileActivity : AppCompatActivity() {
                             }
                         }
                     }
+
+                    // Update Profiles Table (for Inbox)
+                    val profileData = buildJsonObject {
+                        put("id", user?.id)
+                        put("full_name", name)
+                        if (finalAvatarUrl != null) {
+                            put("avatar_url", finalAvatarUrl)
+                        }
+                    }
+                    SupabaseManager.client.postgrest["profiles"].upsert(profileData)
 
                     Toast.makeText(this@EditProfileActivity, "Profile updated successfully", Toast.LENGTH_SHORT).show()
                     finish()

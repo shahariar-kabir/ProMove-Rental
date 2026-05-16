@@ -15,6 +15,7 @@ import com.example.promoverental.adapter.SelectedImageAdapter
 import com.example.promoverental.model.House
 import com.example.promoverental.utils.SupabaseManager
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.materialswitch.MaterialSwitch
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.storage.storage
@@ -66,6 +67,7 @@ class AddHouseActivity : AppCompatActivity() {
         val etBedrooms = findViewById<EditText>(R.id.etBedrooms)
         val etBathrooms = findViewById<EditText>(R.id.etBathrooms)
         val etArea = findViewById<EditText>(R.id.etArea)
+        val switchAvailable = findViewById<MaterialSwitch>(R.id.switchAvailable)
         
         btnAddPhoto = findViewById(R.id.btnAddPhoto)
         btnPublish = findViewById(R.id.btnPublish)
@@ -102,6 +104,7 @@ class AddHouseActivity : AppCompatActivity() {
             etBedrooms.setText(houseToEdit?.bedrooms.toString())
             etBathrooms.setText(houseToEdit?.bathrooms.toString())
             etArea.setText(houseToEdit?.area)
+            switchAvailable.isChecked = houseToEdit?.status == "available"
             existingImageUrls = houseToEdit?.imageUrls?.toMutableList() ?: mutableListOf()
             
             updateLocation(GeoPoint(houseToEdit!!.latitude, houseToEdit!!.longitude))
@@ -129,13 +132,14 @@ class AddHouseActivity : AppCompatActivity() {
             val bedrooms = etBedrooms.text.toString().toIntOrNull() ?: 0
             val bathrooms = etBathrooms.text.toString().toIntOrNull() ?: 0
             val area = etArea.text.toString().trim()
+            val status = if (switchAvailable.isChecked) "available" else "rented"
 
             if (title.isEmpty() || price.isEmpty() || location.isEmpty()) {
                 Toast.makeText(this, "Please fill required fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            publishHouse(title, description, price, location, bedrooms, bathrooms, area)
+            publishHouse(title, description, price, location, bedrooms, bathrooms, area, status)
         }
     }
 
@@ -151,7 +155,7 @@ class AddHouseActivity : AppCompatActivity() {
         map.invalidate()
     }
 
-    private fun publishHouse(title: String, description: String, price: String, location: String, bedrooms: Int, bathrooms: Int, area: String) {
+    private fun publishHouse(title: String, description: String, price: String, location: String, bedrooms: Int, bathrooms: Int, area: String, status: String) {
         val user = SupabaseManager.client.auth.currentUserOrNull()
         if (user == null) return
 
@@ -175,7 +179,8 @@ class AddHouseActivity : AppCompatActivity() {
                     imageUrls = allUrls,
                     ownerId = user.id,
                     latitude = selectedLocation.latitude,
-                    longitude = selectedLocation.longitude
+                    longitude = selectedLocation.longitude,
+                    status = status
                 )
 
                 if (isEditMode) {

@@ -9,5 +9,6 @@ data class Message(
     @SerialName("sender_id") val senderId: String = "",
     @SerialName("receiver_id") val receiverId: String = "",
     val message: String = "",
-    @SerialName("created_at") val createdAt: String? = null
+    @SerialName("created_at") val createdAt: String? = null,
+    @SerialName("is_read") val isRead: Boolean = false
 )

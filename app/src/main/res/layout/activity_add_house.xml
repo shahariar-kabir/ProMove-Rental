@@ -261,6 +261,16 @@
                 <com.google.android.material.chip.Chip android:id="@+id/chipSecurity" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/security" android:checkable="true" />
             </com.google.android.material.chip.ChipGroup>
 
+            <!-- Section: Availability -->
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switchAvailable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Is this house available for rent?"
+                android:checked="true"
+                android:textAppearance="?attr/textAppearanceTitleMedium" />
+
             <!-- Action Buttons -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnPublish"

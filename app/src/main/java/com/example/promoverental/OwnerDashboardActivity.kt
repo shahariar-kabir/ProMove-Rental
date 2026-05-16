@@ -13,12 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.promoverental.adapter.HouseAdapter
+import com.example.promoverental.model.Booking
 import com.example.promoverental.model.House
+import com.example.promoverental.model.Message
 import com.example.promoverental.utils.SupabaseManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.launch
 
 class OwnerDashboardActivity : AppCompatActivity() {
@@ -67,8 +70,25 @@ class OwnerDashboardActivity : AppCompatActivity() {
         rvMyHouses.adapter = houseAdapter
 
         loadMyHouses()
+        loadPendingCount()
 
-        swipeRefresh.setOnRefreshListener { loadMyHouses() }
+        swipeRefresh.setOnRefreshListener { 
+            loadMyHouses()
+            loadPendingCount()
+        }
+        
+        findViewById<View>(R.id.btnNotification).setOnClickListener {
+            startActivity(Intent(this, NotificationActivity::class.java))
+        }
+
+        findViewById<View>(R.id.btnMessagesContainer).setOnClickListener {
+            startActivity(Intent(this, InboxActivity::class.java))
+        }
+
+        findViewById<View>(R.id.cardPending).setOnClickListener {
+            startActivity(Intent(this, BookingRequestsActivity::class.java))
+        }
+
         fabAdd.setOnClickListener { startActivity(Intent(this, AddHouseActivity::class.java)) }
         findViewById<View>(R.id.btnAddFirstHouse).setOnClickListener { startActivity(Intent(this, AddHouseActivity::class.java)) }
 
@@ -87,6 +107,32 @@ class OwnerDashboardActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         loadMyHouses()
+        loadPendingCount()
+        loadUnreadMessageCount()
+    }
+
+    private fun loadUnreadMessageCount() {
+        val userId = SupabaseManager.client.auth.currentUserOrNull()?.id ?: return
+        val tvBadge = findViewById<TextView>(R.id.tvMessageBadge)
+
+        lifecycleScope.launch {
+            try {
+                val count = SupabaseManager.client.postgrest["messages"]
+                    .select {
+                        filter {
+                            eq("receiver_id", userId)
+                            eq("is_read", false)
+                        }
+                    }.decodeList<Message>().size
+
+                if (count > 0) {
+                    tvBadge.visibility = View.VISIBLE
+                    tvBadge.text = if (count > 99) "99+" else count.toString()
+                } else {
+                    tvBadge.visibility = View.GONE
+                }
+            } catch (e: Exception) { }
+        }
     }
 
     private fun loadMyHouses() {
@@ -147,7 +193,30 @@ class OwnerDashboardActivity : AppCompatActivity() {
             emptyState.visibility = View.GONE
             houseAdapter.updateData(houses)
         }
+        
+        val availableCount = houses.count { it.status == "available" }
+        val rentedCount = houses.count { it.status == "rented" }
+        
         findViewById<TextView>(R.id.tvTotalHouses).text = houses.size.toString()
-        findViewById<TextView>(R.id.tvAvailableHouses).text = houses.size.toString()
+        findViewById<TextView>(R.id.tvAvailableHouses).text = availableCount.toString()
+        findViewById<TextView>(R.id.tvRentedHouses).text = rentedCount.toString()
+    }
+
+    private fun loadPendingCount() {
+        val userId = SupabaseManager.client.auth.currentUserOrNull()?.id ?: ""
+        lifecycleScope.launch {
+            try {
+                // Fetch bookings for my houses
+                val response = SupabaseManager.client.postgrest["bookings"]
+                    .select(Columns.raw("*, house:houses(*)")) {
+                        filter {
+                            eq("house.owner_id", userId)
+                            eq("status", "pending")
+                        }
+                    }.decodeList<Booking>()
+                
+                findViewById<TextView>(R.id.tvPendingRequests).text = response.size.toString()
+            } catch (e: Exception) { }
+        }
     }
 }

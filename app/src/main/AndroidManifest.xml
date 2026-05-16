@@ -30,25 +30,27 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SignupActivity" />
-        <activity android:name=".CompleteProfileActivity" />
-        <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".EmailVerificationActivity" />
+        <activity android:name=".MainActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".LoginActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".SignupActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".CompleteProfileActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ForgotPasswordActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".EmailVerificationActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".OwnerDashboardActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".EditProfileActivity" />
-        <activity android:name=".AddHouseActivity" />
+        <activity android:name=".EditProfileActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".AddHouseActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".MovingServiceActivity" />
         <activity android:name=".HouseDetailsActivity" />
-        <activity android:name=".BookMovingServiceActivity" />
-        <activity android:name=".SetNewPasswordActivity" />
+        <activity android:name=".BookMovingServiceActivity" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".SetNewPasswordActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".FullScreenImageActivity" />
         <activity android:name=".SearchActivity" />
         <activity android:name=".MyBookingsActivity" />
-        <activity android:name=".ChatActivity" />
+        <activity android:name=".ChatActivity" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".NotificationActivity" />
+        <activity android:name=".BookingRequestsActivity" />
+        <activity android:name=".InboxActivity" />
     </application>
 
 </manifest>

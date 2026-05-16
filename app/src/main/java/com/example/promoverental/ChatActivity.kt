@@ -16,6 +16,7 @@ import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
 import io.github.jan.supabase.postgrest.query.Order
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -35,6 +36,12 @@ class ChatActivity : AppCompatActivity() {
         receiverId = intent.getStringExtra("receiver_id") ?: ""
         val ownerName = intent.getStringExtra("owner_name") ?: "Chat"
         currentUserId = SupabaseManager.client.auth.currentUserOrNull()?.id ?: ""
+
+        if (receiverId.isEmpty()) {
+            Toast.makeText(this, "Invalid receiver", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
         val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
         toolbar.title = ownerName
@@ -69,19 +76,21 @@ class ChatActivity : AppCompatActivity() {
                     put("receiver_id", receiverId)
                     put("message", text)
                 }
-                SupabaseManager.client.postgrest["messages"].insert(msgObject)
-                // fetchMessages() // Refresh after sending
+                val response = SupabaseManager.client.postgrest["messages"].insert(msgObject)
+                fetchMessages() 
             } catch (e: Exception) {
-                Toast.makeText(this@ChatActivity, "Failed to send: ${e.message}", Toast.LENGTH_SHORT).show()
+                // detailed error for debugging
+                Toast.makeText(this@ChatActivity, "Error: ${e.localizedMessage}", Toast.LENGTH_LONG).show()
+                e.printStackTrace()
             }
         }
     }
 
     private fun startMessagePoller() {
         lifecycleScope.launch {
-            while (true) {
+            while (isActive) {
                 fetchMessages()
-                delay(3000) // Poll every 3 seconds for simple MVP
+                delay(2000) // Poll every 2 seconds
             }
         }
     }
@@ -105,12 +114,31 @@ class ChatActivity : AppCompatActivity() {
                     order("created_at", order = Order.ASCENDING)
                 }.decodeList<Message>()
             
-            adapter.setMessages(response)
-            if (response.isNotEmpty()) {
-                rvMessages.scrollToPosition(response.size - 1)
+            if (response != adapter.getMessages()) {
+                adapter.setMessages(response)
+                if (response.isNotEmpty()) {
+                    rvMessages.smoothScrollToPosition(response.size - 1)
+                    markMessagesAsRead()
+                }
             }
         } catch (e: Exception) {
-            // Silently fail for poller
+            println("Chat Error: ${e.message}")
+        }
+    }
+
+    private fun markMessagesAsRead() {
+        lifecycleScope.launch {
+            try {
+                SupabaseManager.client.postgrest["messages"].update(buildJsonObject {
+                    put("is_read", true)
+                }) {
+                    filter {
+                        eq("sender_id", receiverId)
+                        eq("receiver_id", currentUserId)
+                        eq("is_read", false)
+                    }
+                }
+            } catch (e: Exception) { }
         }
     }
 }

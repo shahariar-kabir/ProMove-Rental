@@ -67,7 +67,10 @@ class HouseDetailsActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.tvBathrooms).text = it.bathrooms.toString()
             findViewById<TextView>(R.id.tvArea).text = it.area
             findViewById<TextView>(R.id.tvDescription).text = it.description
-            findViewById<TextView>(R.id.tvOwnerName).text = "House Owner"
+            
+            // Fetch Owner details (Simulated for MVP, but passing what we have)
+            val ownerName = "Owner" // In a real app, you'd fetch this from a 'profiles' table
+            findViewById<TextView>(R.id.tvOwnerName).text = ownerName
             findViewById<TextView>(R.id.tvOwnerPhone).text = "+880 1234 567890"
 
             // Setup Image Slider
@@ -126,7 +129,7 @@ class HouseDetailsActivity : AppCompatActivity() {
         findViewById<View>(R.id.btnMessageOwner).setOnClickListener {
             val intent = Intent(this, ChatActivity::class.java)
             intent.putExtra("receiver_id", house?.ownerId)
-            intent.putExtra("owner_name", "House Owner")
+            intent.putExtra("owner_name", findViewById<TextView>(R.id.tvOwnerName).text.toString())
             startActivity(intent)
         }
     }
