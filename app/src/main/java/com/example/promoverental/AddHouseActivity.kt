@@ -1,8 +1,10 @@
 package com.example.promoverental
 
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,6 +31,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
+import java.util.Locale
 import java.util.UUID
 
 class AddHouseActivity : AppCompatActivity() {
@@ -38,12 +41,14 @@ class AddHouseActivity : AppCompatActivity() {
     private lateinit var imageAdapter: SelectedImageAdapter
     private lateinit var btnAddPhoto: MaterialButton
     private lateinit var btnPublish: MaterialButton
+    private lateinit var etLocation: EditText
     private var isEditMode = false
     private var houseToEdit: House? = null
     
     private lateinit var map: MapView
     private var selectedLocation: GeoPoint = GeoPoint(23.8103, 90.4125)
     private var locationMarker: Marker? = null
+    private lateinit var geocoder: Geocoder
 
     private val imagePickerLauncher = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris ->
         if (uris.isNotEmpty()) {
@@ -63,12 +68,14 @@ class AddHouseActivity : AppCompatActivity() {
         val etTitle = findViewById<EditText>(R.id.etTitle)
         val etDescription = findViewById<EditText>(R.id.etDescription)
         val etPrice = findViewById<EditText>(R.id.etRent)
-        val etLocation = findViewById<EditText>(R.id.etAddress)
+        etLocation = findViewById<EditText>(R.id.etAddress)
         val etBedrooms = findViewById<EditText>(R.id.etBedrooms)
         val etBathrooms = findViewById<EditText>(R.id.etBathrooms)
         val etArea = findViewById<EditText>(R.id.etArea)
         val switchAvailable = findViewById<MaterialSwitch>(R.id.switchAvailable)
         
+        geocoder = Geocoder(this, Locale.getDefault())
+
         btnAddPhoto = findViewById(R.id.btnAddPhoto)
         btnPublish = findViewById(R.id.btnPublish)
         val rvImages = findViewById<RecyclerView>(R.id.rvImages)
@@ -77,17 +84,31 @@ class AddHouseActivity : AppCompatActivity() {
         map = findViewById(R.id.mapview)
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.setMultiTouchControls(true)
-        map.controller.setZoom(12.0)
+        map.controller.setZoom(15.0)
         map.controller.setCenter(selectedLocation)
 
         val eventsReceiver = object : MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: GeoPoint): Boolean {
-                updateLocation(p)
+                updateLocation(p, true)
                 return true
             }
             override fun longPressHelper(p: GeoPoint): Boolean = false
         }
         map.overlays.add(MapEventsOverlay(eventsReceiver))
+
+        // Address Field Search Logic
+        findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.tilAddress).setEndIconOnClickListener {
+            searchLocationFromAddress(etLocation.text.toString())
+        }
+
+        etLocation.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH || actionId == EditorInfo.IME_ACTION_DONE) {
+                searchLocationFromAddress(v.text.toString())
+                true
+            } else {
+                false
+            }
+        }
 
         // Check if we are in Edit Mode
         houseToEdit = intent.getSerializableExtra("house") as? House
@@ -107,7 +128,7 @@ class AddHouseActivity : AppCompatActivity() {
             switchAvailable.isChecked = houseToEdit?.status == "available"
             existingImageUrls = houseToEdit?.imageUrls?.toMutableList() ?: mutableListOf()
             
-            updateLocation(GeoPoint(houseToEdit!!.latitude, houseToEdit!!.longitude))
+            updateLocation(GeoPoint(houseToEdit!!.latitude, houseToEdit!!.longitude), false)
         }
 
         // Image Preview
@@ -143,7 +164,7 @@ class AddHouseActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateLocation(p: GeoPoint) {
+    private fun updateLocation(p: GeoPoint, updateTextField: Boolean) {
         selectedLocation = p
         if (locationMarker == null) {
             locationMarker = Marker(map)
@@ -153,6 +174,51 @@ class AddHouseActivity : AppCompatActivity() {
         locationMarker?.position = p
         map.controller.animateTo(p)
         map.invalidate()
+
+        if (updateTextField) {
+            reverseGeocode(p)
+        }
+    }
+
+    private fun reverseGeocode(p: GeoPoint) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val addresses = geocoder.getFromLocation(p.latitude, p.longitude, 1)
+                if (!addresses.isNullOrEmpty()) {
+                    val address = addresses[0].getAddressLine(0)
+                    withContext(Dispatchers.Main) {
+                        etLocation.setText(address)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun searchLocationFromAddress(addressStr: String) {
+        if (addressStr.isEmpty()) return
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val addresses = geocoder.getFromLocationName(addressStr, 1)
+                if (!addresses.isNullOrEmpty()) {
+                    val lat = addresses[0].latitude
+                    val lng = addresses[0].longitude
+                    val p = GeoPoint(lat, lng)
+                    withContext(Dispatchers.Main) {
+                        updateLocation(p, false)
+                    }
+                } else {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@AddHouseActivity, "Location not found", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@AddHouseActivity, "Error finding location", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
     }
 
     private fun publishHouse(title: String, description: String, price: String, location: String, bedrooms: Int, bathrooms: Int, area: String, status: String) {

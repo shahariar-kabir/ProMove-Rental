@@ -32,15 +32,15 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginEnd="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true">
 
-                    <ImageButton
+                    <ImageView
                         android:id="@+id/btnMessages"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="Messages"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center"
                         android:src="@drawable/ic_message"
                         app:tint="?attr/colorOnSurface" />
 
@@ -203,11 +203,15 @@
                 </GridLayout>
 
                 <LinearLayout
+                    android:id="@+id/btnViewMyHouses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="8dp">
 
                     <TextView
                         android:layout_width="0dp"
@@ -226,26 +230,35 @@
                         android:textAppearance="?attr/textAppearanceLabelLarge" />
                 </LinearLayout>
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvMyHouses"
+                <!-- Summary Chart or Recent Activity could go here -->
+                <com.google.android.material.card.MaterialCardView
+                    style="?attr/materialCardViewElevatedStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:nestedScrollingEnabled="false"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    app:cardCornerRadius="24dp">
 
-                <LinearLayout
-                    android:id="@+id/emptyState"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="48dp"
-                    android:visibility="gone">
-                    <ImageView android:layout_width="80dp" android:layout_height="80dp" android:src="@drawable/ic_home" app:tint="?attr/colorOutlineVariant" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/no_houses_yet" android:textAppearance="?attr/textAppearanceBodyMedium" android:textColor="?attr/colorOutline" />
-                    <com.google.android.material.button.MaterialButton android:id="@+id/btnAddFirstHouse" style="@style/Widget.Material3.Button.TonalButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:text="@string/add_new_house" />
-                </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Recent Activity"
+                            android:textAppearance="?attr/textAppearanceTitleMedium"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvRecentActivity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:text="Check your bookings and messages for updates."
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            android:textColor="?attr/colorOutline" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <ProgressBar
                     android:id="@+id/progressBar"

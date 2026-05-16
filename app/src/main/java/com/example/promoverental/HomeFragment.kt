@@ -74,13 +74,8 @@ class HomeFragment : Fragment() {
             startActivity(Intent(context, NotificationActivity::class.java))
         }
 
-        val btnInbox = view.findViewById<View>(R.id.btnMessages)
-        btnInbox.setOnClickListener {
-            startActivity(Intent(context, InboxActivity::class.java))
-        }
-        
         view.findViewById<View>(R.id.btnMessagesContainer).setOnClickListener {
-            btnInbox.performClick()
+            startActivity(Intent(context, InboxActivity::class.java))
         }
 
         view.findViewById<View>(R.id.searchBar).setOnClickListener {
