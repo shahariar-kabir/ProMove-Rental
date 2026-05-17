@@ -118,17 +118,17 @@ class AddHouseActivity : AppCompatActivity() {
             findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)?.title = "Edit House"
             
             // Pre-fill data
-            etTitle.setText(houseToEdit?.title)
-            etDescription.setText(houseToEdit?.description)
-            etPrice.setText(houseToEdit?.price)
-            etLocation.setText(houseToEdit?.location)
-            etBedrooms.setText(houseToEdit?.bedrooms.toString())
-            etBathrooms.setText(houseToEdit?.bathrooms.toString())
-            etArea.setText(houseToEdit?.area)
-            switchAvailable.isChecked = houseToEdit?.status == "available"
+            etTitle.setText(houseToEdit?.title ?: "")
+            etDescription.setText(houseToEdit?.description ?: "")
+            etPrice.setText(houseToEdit?.price ?: "")
+            etLocation.setText(houseToEdit?.location ?: "")
+            etBedrooms.setText((houseToEdit?.bedrooms ?: 0).toString())
+            etBathrooms.setText((houseToEdit?.bathrooms ?: 0).toString())
+            etArea.setText(houseToEdit?.area ?: "")
+            switchAvailable.isChecked = (houseToEdit?.status ?: "available") == "available"
             existingImageUrls = houseToEdit?.imageUrls?.toMutableList() ?: mutableListOf()
             
-            updateLocation(GeoPoint(houseToEdit!!.latitude, houseToEdit!!.longitude), false)
+            updateLocation(GeoPoint(houseToEdit?.latitude ?: 23.8103, houseToEdit?.longitude ?: 90.4125), false)
         }
 
         // Image Preview

@@ -39,9 +39,9 @@ class HouseAdapter(
         val house = houses[position]
         val context = holder.itemView.context
 
-        holder.tvTitle.text = house.title
-        holder.tvPrice.text = context.getString(R.string.rent_amount, house.price)
-        holder.tvArea.text = context.getString(R.string.sq_feet, house.area)
+        holder.tvTitle.text = house.title ?: "No Title"
+        holder.tvPrice.text = context.getString(R.string.rent_amount, house.price ?: "0")
+        holder.tvArea.text = context.getString(R.string.sq_feet, house.area ?: "0")
         
         val firstImageUrl = house.imageUrls.firstOrNull()
         holder.ivHouse.load(firstImageUrl) {
@@ -53,9 +53,9 @@ class HouseAdapter(
         // Owner functionality
         if (isOwner) {
             holder.tvStatus.visibility = View.VISIBLE
-            holder.tvStatus.text = house.status
+            holder.tvStatus.text = house.status ?: "available"
             holder.tvStatus.setTextColor(
-                if (house.status == "available") context.getColor(R.color.success) 
+                if (house.status == "available" || house.status.isNullOrEmpty()) context.getColor(R.color.success)
                 else context.getColor(R.color.secondary)
             )
             holder.ownerActions.visibility = View.VISIBLE

@@ -1,16 +1,20 @@
 package com.example.promoverental
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.promoverental.model.Booking
 import com.example.promoverental.model.House
 import com.example.promoverental.model.Message
+import com.example.promoverental.service.MessageCheckService
 import com.example.promoverental.utils.SupabaseManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -27,6 +31,9 @@ class OwnerDashboardActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_owner_dashboard)
+
+        checkLocationPermissions()
+        startService(Intent(this, MessageCheckService::class.java))
 
         swipeRefresh = findViewById(R.id.swipeRefresh)
         progressBar = findViewById(R.id.progressBar)
@@ -53,6 +60,18 @@ class OwnerDashboardActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.btnMessagesContainer).setOnClickListener {
             startActivity(Intent(this, InboxActivity::class.java))
+        }
+
+        findViewById<View>(R.id.cardTotalHouses).setOnClickListener {
+            startActivity(Intent(this, MyHousesActivity::class.java))
+        }
+
+        findViewById<View>(R.id.cardAvailableHouses).setOnClickListener {
+            startActivity(Intent(this, AvailableHousesActivity::class.java))
+        }
+
+        findViewById<View>(R.id.cardRentedHouses).setOnClickListener {
+            startActivity(Intent(this, RentedHousesActivity::class.java))
         }
 
         findViewById<View>(R.id.cardPending).setOnClickListener {
@@ -106,7 +125,7 @@ class OwnerDashboardActivity : AppCompatActivity() {
     }
 
     private fun updateUI(houses: List<House>) {
-        val availableCount = houses.count { it.status == "available" || it.status.isEmpty() }
+        val availableCount = houses.count { it.status == "available" || it.status.isNullOrEmpty() }
         val rentedCount = houses.count { it.status == "rented" }
         
         findViewById<TextView>(R.id.tvTotalHouses).text = houses.size.toString()
@@ -119,7 +138,7 @@ class OwnerDashboardActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = SupabaseManager.client.postgrest["bookings"]
-                    .select(Columns.raw("*, house:houses(*)")) {
+                    .select(Columns.raw("*, house:houses!inner(*)")) {
                         filter {
                             eq("house.owner_id", userId)
                             eq("status", "pending")
@@ -152,6 +171,13 @@ class OwnerDashboardActivity : AppCompatActivity() {
                     tvBadge.visibility = View.GONE
                 }
             } catch (e: Exception) { }
+        }
+    }
+
+    private fun checkLocationPermissions() {
+        val fineLocation = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (fineLocation != PackageManager.PERMISSION_GRANTED) {
+            // Usually requested in MainActivity
         }
     }
 }

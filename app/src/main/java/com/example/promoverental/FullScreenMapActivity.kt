@@ -59,7 +59,7 @@ class FullScreenMapActivity : AppCompatActivity() {
         when (mode) {
             "view_single" -> {
                 selectedHouse?.let {
-                    val p = GeoPoint(it.latitude, it.longitude)
+                    val p = GeoPoint(it.latitude ?: 23.8103, it.longitude ?: 90.4125)
                     addMarker(it)
                     mapController.setCenter(p)
                     mapController.setZoom(18.0)
@@ -76,10 +76,10 @@ class FullScreenMapActivity : AppCompatActivity() {
 
     private fun addMarker(house: House) {
         val marker = Marker(map)
-        marker.position = GeoPoint(house.latitude, house.longitude)
+        marker.position = GeoPoint(house.latitude ?: 23.8103, house.longitude ?: 90.4125)
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        marker.title = house.title
-        marker.snippet = house.price
+        marker.title = house.title ?: "House"
+        marker.snippet = house.price ?: ""
         marker.setOnMarkerClickListener { _, _ ->
             if (mode == "view_all") {
                 val intent = Intent(this, HouseDetailsActivity::class.java)
@@ -94,13 +94,15 @@ class FullScreenMapActivity : AppCompatActivity() {
     private fun fetchAndShowAllHouses() {
         lifecycleScope.launch {
             try {
-                val response = SupabaseManager.client.postgrest["houses"]
-                    .select { filter { eq("status", "available") } }
-                    .decodeList<House>()
+                val allHouses = SupabaseManager.client.postgrest["houses"]
+                    .select().decodeList<House>()
                 
-                response.forEach { addMarker(it) }
-                if (response.isNotEmpty()) {
-                    map.controller.setCenter(GeoPoint(response[0].latitude, response[0].longitude))
+                val availableHouses = allHouses.filter { it.status == "available" || it.status.isNullOrEmpty() }
+                
+                availableHouses.forEach { addMarker(it) }
+                if (availableHouses.isNotEmpty()) {
+                    val first = availableHouses[0]
+                    map.controller.setCenter(GeoPoint(first.latitude ?: 23.8103, first.longitude ?: 90.4125))
                 }
                 map.invalidate()
             } catch (e: Exception) { }

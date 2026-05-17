@@ -30,9 +30,9 @@ class FeaturedHouseAdapter(
 
     override fun onBindViewHolder(holder: FeaturedHouseViewHolder, position: Int) {
         val house = houses[position]
-        holder.tvTitle.text = house.title
-        holder.tvLocation.text = house.location
-        holder.tvPrice.text = house.price
+        holder.tvTitle.text = house.title ?: "No Title"
+        holder.tvLocation.text = house.location ?: "No Location"
+        holder.tvPrice.text = house.price ?: "0"
         
         val firstImageUrl = house.imageUrls.firstOrNull()
         holder.ivHouse.load(firstImageUrl) {

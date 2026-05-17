@@ -57,7 +57,9 @@ class NotificationActivity : AppCompatActivity() {
                     adapter.updateData(response)
                 }
             } catch (e: Exception) {
-                Toast.makeText(this@NotificationActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                // Handle missing table or other errors by showing empty state
+                emptyState.visibility = View.VISIBLE
+                rvNotifications.visibility = View.GONE
             }
         }
     }

@@ -97,7 +97,7 @@ class HomeFragment : Fragment() {
                 val response = SupabaseManager.client.postgrest["houses"]
                     .select().decodeList<House>()
                 
-                val availableHouses = response.filter { it.status == "available" || it.status.isEmpty() }
+                val availableHouses = response.filter { it.status == "available" || it.status.isNullOrEmpty() }
                 
                 houseAdapter.updateData(availableHouses)
                 
@@ -123,10 +123,10 @@ class HomeFragment : Fragment() {
         map.overlays.add(locationOverlay)
         for (house in houses) {
             val marker = Marker(map)
-            marker.position = GeoPoint(house.latitude, house.longitude)
+            marker.position = GeoPoint(house.latitude ?: 23.8103, house.longitude ?: 90.4125)
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.title = house.title
-            marker.snippet = house.price
+            marker.title = house.title ?: "House"
+            marker.snippet = house.price ?: ""
             marker.setOnMarkerClickListener { _, _ ->
                 val intent = Intent(context, HouseDetailsActivity::class.java)
                 intent.putExtra("house", house)

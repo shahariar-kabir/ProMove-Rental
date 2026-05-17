@@ -60,13 +60,13 @@ class HouseDetailsActivity : AppCompatActivity() {
         map.setMultiTouchControls(true)
 
         house?.let {
-            findViewById<TextView>(R.id.tvTitle).text = it.title
-            findViewById<TextView>(R.id.tvLocation).text = it.location
-            findViewById<TextView>(R.id.tvPrice).text = it.price
-            findViewById<TextView>(R.id.tvBedrooms).text = it.bedrooms.toString()
-            findViewById<TextView>(R.id.tvBathrooms).text = it.bathrooms.toString()
-            findViewById<TextView>(R.id.tvArea).text = it.area
-            findViewById<TextView>(R.id.tvDescription).text = it.description
+            findViewById<TextView>(R.id.tvTitle).text = it.title ?: "No Title"
+            findViewById<TextView>(R.id.tvLocation).text = it.location ?: "No Location"
+            findViewById<TextView>(R.id.tvPrice).text = it.price ?: "0"
+            findViewById<TextView>(R.id.tvBedrooms).text = (it.bedrooms ?: 0).toString()
+            findViewById<TextView>(R.id.tvBathrooms).text = (it.bathrooms ?: 0).toString()
+            findViewById<TextView>(R.id.tvArea).text = it.area ?: "0"
+            findViewById<TextView>(R.id.tvDescription).text = it.description ?: ""
             
             // Fetch Owner details (Simulated for MVP, but passing what we have)
             val ownerName = "Owner" // In a real app, you'd fetch this from a 'profiles' table
@@ -95,7 +95,7 @@ class HouseDetailsActivity : AppCompatActivity() {
             }
 
             // Setup Map Location
-            val startPoint = GeoPoint(it.latitude, it.longitude)
+            val startPoint = GeoPoint(it.latitude ?: 23.8103, it.longitude ?: 90.4125)
             val mapController = map.controller
             mapController.setZoom(17.5)
             mapController.setCenter(startPoint)
@@ -103,7 +103,7 @@ class HouseDetailsActivity : AppCompatActivity() {
             val startMarker = Marker(map)
             startMarker.position = startPoint
             startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            startMarker.title = it.title
+            startMarker.title = it.title ?: "House"
             map.overlays.add(startMarker)
 
             findViewById<View>(R.id.btnFullScreenMap).setOnClickListener {

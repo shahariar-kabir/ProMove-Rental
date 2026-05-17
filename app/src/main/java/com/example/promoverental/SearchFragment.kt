@@ -93,7 +93,7 @@ class SearchFragment : Fragment() {
                     .select().decodeList<House>()
                 
                 // Filter locally: show available or those with no status set yet (old data)
-                allHouses = response.filter { it.status == "available" || it.status.isEmpty() }
+                allHouses = response.filter { it.status == "available" || it.status.isNullOrEmpty() }
                 
                 houseAdapter.updateData(allHouses)
                 updateMapMarkers(allHouses)
@@ -105,7 +105,8 @@ class SearchFragment : Fragment() {
 
     private fun filter(text: String) {
         val filteredList = allHouses.filter { 
-            it.title.contains(text, ignoreCase = true) || it.location.contains(text, ignoreCase = true)
+            (it.title?.contains(text, ignoreCase = true) == true) || 
+            (it.location?.contains(text, ignoreCase = true) == true)
         }
         houseAdapter.updateData(filteredList)
         updateMapMarkers(filteredList)
@@ -130,10 +131,10 @@ class SearchFragment : Fragment() {
         map.overlays.clear()
         for (house in houses) {
             val marker = Marker(map)
-            marker.position = GeoPoint(house.latitude, house.longitude)
+            marker.position = GeoPoint(house.latitude ?: 23.8103, house.longitude ?: 90.4125)
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.title = house.title
-            marker.snippet = house.price
+            marker.title = house.title ?: "House"
+            marker.snippet = house.price ?: ""
             marker.setOnMarkerClickListener { _, _ ->
                 val intent = Intent(context, HouseDetailsActivity::class.java)
                 intent.putExtra("house", house)
@@ -143,7 +144,8 @@ class SearchFragment : Fragment() {
             map.overlays.add(marker)
         }
         if (houses.isNotEmpty() && isMapView) {
-            map.controller.animateTo(GeoPoint(houses.first().latitude, houses.first().longitude))
+            val firstHouse = houses.first()
+            map.controller.animateTo(GeoPoint(firstHouse.latitude ?: 23.8103, firstHouse.longitude ?: 90.4125))
         }
         map.invalidate()
     }

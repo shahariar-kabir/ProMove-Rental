@@ -119,11 +119,14 @@
 
                     <!-- Total Houses Card -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardTotalHouses"
                         style="?attr/materialCardViewFilledStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
                         android:layout_margin="6dp"
+                        android:clickable="true"
+                        android:focusable="true"
                         app:cardCornerRadius="20dp">
 
                         <LinearLayout
@@ -139,11 +142,14 @@
 
                     <!-- Available -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardAvailableHouses"
                         style="?attr/materialCardViewFilledStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
                         android:layout_margin="6dp"
+                        android:clickable="true"
+                        android:focusable="true"
                         app:cardCornerRadius="20dp">
 
                         <LinearLayout
@@ -159,11 +165,14 @@
 
                     <!-- Rented -->
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardRentedHouses"
                         style="?attr/materialCardViewFilledStyle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_columnWeight="1"
                         android:layout_margin="6dp"
+                        android:clickable="true"
+                        android:focusable="true"
                         app:cardCornerRadius="20dp">
 
                         <LinearLayout
