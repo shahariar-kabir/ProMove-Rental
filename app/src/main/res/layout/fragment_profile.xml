@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:paddingBottom="100dp">
+        android:padding="24dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivProfile"
@@ -30,7 +29,10 @@
             android:text="Kabir"
             android:textColor="@color/text_primary"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:drawableEndCompat="@drawable/ic_check_circle"
+            app:drawableTint="?attr/colorPrimary"
+            android:drawablePadding="8dp" />
 
         <TextView
             android:id="@+id/tvEmail"
@@ -40,6 +42,15 @@
             android:textColor="@color/text_secondary"
             android:textSize="14sp" />
 
+        <TextView
+            android:id="@+id/tvMemberSince"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Member since 2024"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
+            android:textColor="?attr/colorOutline" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEditProfile"
             style="@style/Widget.Material3.Button.OutlinedButton"
@@ -48,6 +59,78 @@
             android:layout_marginTop="16dp"
             android:text="@string/edit_profile"
             android:textAllCaps="false" />
+
+        <!-- User Info Cards -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="?attr/colorOutlineVariant">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:id="@+id/layoutPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="8dp">
+                    <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_phone" app:tint="?attr/colorPrimary" android:contentDescription="@string/phone" />
+                    <TextView android:id="@+id/tvProfilePhone" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:text="Not set" android:textAppearance="?attr/textAppearanceBodyMedium" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="8dp">
+                    <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_location" app:tint="?attr/colorPrimary" android:contentDescription="@string/location" />
+                    <TextView android:id="@+id/tvProfileLocation" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:text="Not set" android:textAppearance="?attr/textAppearanceBodyMedium" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/layoutOccupation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="8dp">
+                    <ImageView android:layout_width="20dp" android:layout_height="20dp" android:src="@drawable/ic_person" app:tint="?attr/colorPrimary" android:contentDescription="Occupation" />
+                    <TextView android:id="@+id/tvProfileOccupation" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginStart="12dp" android:text="Not set" android:textAppearance="?attr/textAppearanceBodyMedium" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardBio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="?attr/colorOutlineVariant">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bio" android:textStyle="bold" android:textAppearance="?attr/textAppearanceLabelLarge" android:textColor="?attr/colorPrimary"/>
+                <TextView android:id="@+id/tvProfileBio" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="No bio added yet." android:textAppearance="?attr/textAppearanceBodyMedium" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -120,6 +203,11 @@
                 android:textColor="@color/error"
                 app:icon="@drawable/ic_logout"
                 app:iconTint="@color/error" />
+
+            <!-- Space for Bottom Navigation -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="120dp" />
 
         </LinearLayout>
 

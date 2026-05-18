@@ -25,6 +25,11 @@ class ProfileFragment : Fragment() {
     private lateinit var ivProfile: ImageView
     private lateinit var tvName: TextView
     private lateinit var tvEmail: TextView
+    private lateinit var tvMemberSince: TextView
+    private lateinit var tvPhone: TextView
+    private lateinit var tvLocation: TextView
+    private lateinit var tvOccupation: TextView
+    private lateinit var tvBio: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,6 +40,11 @@ class ProfileFragment : Fragment() {
         ivProfile = view.findViewById(R.id.ivProfile)
         tvName = view.findViewById(R.id.tvName)
         tvEmail = view.findViewById(R.id.tvEmail)
+        tvMemberSince = view.findViewById(R.id.tvMemberSince)
+        tvPhone = view.findViewById(R.id.tvProfilePhone)
+        tvLocation = view.findViewById(R.id.tvProfileLocation)
+        tvOccupation = view.findViewById(R.id.tvProfileOccupation)
+        tvBio = view.findViewById(R.id.tvProfileBio)
 
         val user = SupabaseManager.client.auth.currentUserOrNull()
         val currentRole = user?.userMetadata?.get("role")?.toString()?.replace("\"", "") ?: "finder"
@@ -75,6 +85,10 @@ class ProfileFragment : Fragment() {
             }
         }
 
+        view.findViewById<MaterialButton>(R.id.btnSettings).setOnClickListener {
+            Toast.makeText(context, "Settings coming soon!", Toast.LENGTH_SHORT).show()
+        }
+
         view.findViewById<MaterialButton>(R.id.btnLogout).setOnClickListener {
             lifecycleScope.launch {
                 SupabaseManager.client.auth.signOut()
@@ -93,9 +107,13 @@ class ProfileFragment : Fragment() {
         loadUserProfile()
     }
 
+    @OptIn(kotlin.time.ExperimentalTime::class)
     private fun loadUserProfile() {
         val user = SupabaseManager.client.auth.currentUserOrNull() ?: return
         tvEmail.text = user.email
+        
+        val createdAt = user.createdAt?.toString()?.split("T")?.firstOrNull() ?: "2024"
+        tvMemberSince.text = "Member since $createdAt"
 
         viewLifecycleOwner.lifecycleScope.launch {
             try {
@@ -105,6 +123,10 @@ class ProfileFragment : Fragment() {
 
                 profile?.let { p ->
                     tvName.text = p.fullName ?: "User"
+                    tvPhone.text = p.phone ?: "Not set"
+                    tvLocation.text = p.location ?: "Not set"
+                    tvOccupation.text = p.occupation ?: "Not set"
+                    tvBio.text = p.bio ?: "No bio added yet."
 
                     if (!p.avatarUrl.isNullOrEmpty()) {
                         ivProfile.load(p.avatarUrl) {

@@ -21,6 +21,8 @@ import kotlinx.coroutines.launch
 class FavoritesFragment : Fragment() {
 
     private lateinit var houseAdapter: HouseAdapter
+    private lateinit var emptyState: View
+    private lateinit var rvFavorites: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +30,8 @@ class FavoritesFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_favorites, container, false)
 
-        val rvFavorites = view.findViewById<RecyclerView>(R.id.rvFavorites)
+        rvFavorites = view.findViewById(R.id.rvFavorites)
+        emptyState = view.findViewById(R.id.emptyState)
         rvFavorites.layoutManager = LinearLayoutManager(context)
 
         houseAdapter = HouseAdapter(emptyList()) { house ->
@@ -56,9 +59,18 @@ class FavoritesFragment : Fragment() {
                     }.decodeList<Favorite>()
                 
                 val favoriteHouses = response.mapNotNull { it.house }
-                houseAdapter.updateData(favoriteHouses)
+                
+                if (favoriteHouses.isEmpty()) {
+                    rvFavorites.visibility = View.GONE
+                    emptyState.visibility = View.VISIBLE
+                } else {
+                    rvFavorites.visibility = View.VISIBLE
+                    emptyState.visibility = View.GONE
+                    houseAdapter.updateData(favoriteHouses)
+                }
             } catch (e: Exception) {
-                Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                rvFavorites.visibility = View.GONE
+                emptyState.visibility = View.VISIBLE
             }
         }
     }

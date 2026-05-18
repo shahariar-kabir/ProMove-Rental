@@ -84,7 +84,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="80dp">
+            android:paddingBottom="120dp"
+            android:clipToPadding="false">
 
             <!-- Title -->
             <TextView
@@ -205,11 +206,14 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvViewAllFeatured"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/view_all"
                     android:textColor="?attr/colorPrimary"
-                    android:textAppearance="?attr/textAppearanceLabelLarge" />
+                    android:textAppearance="?attr/textAppearanceLabelLarge"
+                    android:clickable="true"
+                    android:focusable="true" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -223,15 +227,32 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_house_featured" />
 
-            <!-- Top Rentals Section -->
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="32dp"
-                android:text="@string/top_rentals"
-                android:textAppearance="?attr/textAppearanceTitleLarge"
-                android:textStyle="bold" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/top_rentals"
+                    android:textAppearance="?attr/textAppearanceTitleLarge"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvViewAllTop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/view_all"
+                    android:textColor="?attr/colorPrimary"
+                    android:textAppearance="?attr/textAppearanceLabelLarge"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTopRentals"
@@ -241,6 +262,11 @@
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_house_list" />
+
+            <!-- Space for Bottom Navigation -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

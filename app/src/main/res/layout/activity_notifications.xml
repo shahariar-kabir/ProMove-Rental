@@ -38,7 +38,7 @@
         android:orientation="vertical"
         android:visibility="gone">
         <ImageView android:layout_width="80dp" android:layout_height="80dp" android:src="@drawable/ic_notification" app:tint="?attr/colorOutlineVariant" />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="No notifications yet" android:textAppearance="?attr/textAppearanceBodyLarge" android:textColor="?attr/colorOutline" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/no_notifications_yet" android:textAppearance="?attr/textAppearanceBodyLarge" android:textColor="?attr/colorOutline" />
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

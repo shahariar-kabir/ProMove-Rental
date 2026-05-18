@@ -124,6 +124,9 @@
     <string name="view_all">View All</string>
     <string name="recent_houses">Recent Houses</string>
     <string name="no_houses_found">No houses found</string>
+    <string name="no_favorites_yet">No favorites yet</string>
+    <string name="no_bookings_yet">No bookings yet</string>
+    <string name="no_notifications_yet">No notifications yet</string>
     <string name="try_different_search">Try a different search</string>
     <string name="price_range">Price Range</string>
     <string name="bedrooms_filter">Bedrooms</string>

@@ -16,6 +16,7 @@ import com.example.promoverental.adapter.HouseAdapter
 import com.example.promoverental.model.House
 import com.example.promoverental.model.Message
 import com.example.promoverental.utils.SupabaseManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import io.github.jan.supabase.auth.auth
 import io.github.jan.supabase.postgrest.postgrest
@@ -88,6 +89,14 @@ class HomeFragment : Fragment() {
             startActivity(intent)
         }
 
+        view.findViewById<View>(R.id.tvViewAllFeatured).setOnClickListener {
+            (activity as? MainActivity)?.findViewById<BottomNavigationView>(R.id.bottomNavigation)?.selectedItemId = R.id.nav_search
+        }
+
+        view.findViewById<View>(R.id.tvViewAllTop).setOnClickListener {
+            (activity as? MainActivity)?.findViewById<BottomNavigationView>(R.id.bottomNavigation)?.selectedItemId = R.id.nav_search
+        }
+
         return view
     }
 
@@ -151,6 +160,17 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         map.onResume()
+        locationOverlay.enableMyLocation()
+        locationOverlay.enableFollowLocation()
+        locationOverlay.runOnFirstFix {
+            activity?.runOnUiThread {
+                if (isAdded) {
+                    map.controller.animateTo(locationOverlay.myLocation)
+                    map.controller.setZoom(15.0)
+                    map.invalidate()
+                }
+            }
+        }
         fetchHouses()
         loadUnreadMessageCount()
     }
@@ -182,5 +202,6 @@ class HomeFragment : Fragment() {
     override fun onPause() {
         super.onPause()
         map.onPause()
+        locationOverlay.disableMyLocation()
     }
 }
