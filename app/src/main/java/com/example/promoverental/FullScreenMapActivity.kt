@@ -50,9 +50,17 @@ class FullScreenMapActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.btnClose).setOnClickListener { finish() }
         findViewById<View>(R.id.fabMyLocation).setOnClickListener {
-            locationOverlay.myLocation?.let {
-                mapController.animateTo(it)
-                mapController.setZoom(15.0)
+            if (mode == "view_single" && selectedHouse != null) {
+                val p = GeoPoint(selectedHouse?.latitude ?: 23.8103, selectedHouse?.longitude ?: 90.4125)
+                map.controller.animateTo(p)
+                map.controller.setZoom(18.0)
+            } else {
+                locationOverlay.myLocation?.let {
+                    map.controller.animateTo(it)
+                    map.controller.setZoom(15.0)
+                } ?: run {
+                    Toast.makeText(this, "Location not available", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

@@ -99,7 +99,7 @@
     <string name="signup">Sign Up</string>
     <string name="change_photo">Change Photo</string>
     <string name="terms_agree">I agree to the Terms and Conditions</string>
-    <string name="login_title">Welcome Back</string>
+    <string name="login_title">Welcome</string>
     <string name="welcome_message">Log in to your account</string>
     <string name="sign_up">Sign Up</string>
     <string name="verification_title">Email Verification</string>

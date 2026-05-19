@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.app.AlertDialog
 import com.example.promoverental.adapter.MessageAdapter
 import com.example.promoverental.model.Message
 import com.example.promoverental.utils.SupabaseManager
@@ -51,7 +52,9 @@ class ChatActivity : AppCompatActivity() {
         etMessage = findViewById(R.id.etMessage)
         val btnSend = findViewById<MaterialButton>(R.id.btnSend)
 
-        adapter = MessageAdapter(currentUserId)
+        adapter = MessageAdapter(currentUserId) { message ->
+            showDeleteDialog(message)
+        }
         rvMessages.layoutManager = LinearLayoutManager(this).apply {
             stackFromEnd = true
         }
@@ -65,6 +68,32 @@ class ChatActivity : AppCompatActivity() {
         }
 
         startMessagePoller()
+    }
+
+    private fun showDeleteDialog(message: Message) {
+        AlertDialog.Builder(this)
+            .setTitle("Delete Message")
+            .setMessage("Are you sure you want to delete this message?")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteMessage(message)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun deleteMessage(message: Message) {
+        lifecycleScope.launch {
+            try {
+                SupabaseManager.client.postgrest["messages"].delete {
+                    filter {
+                        eq("id", message.id ?: "")
+                    }
+                }
+                fetchMessages()
+            } catch (e: Exception) {
+                Toast.makeText(this@ChatActivity, "Failed to delete: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun sendMessage(text: String) {

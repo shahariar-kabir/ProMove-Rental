@@ -161,7 +161,6 @@ class HomeFragment : Fragment() {
         super.onResume()
         map.onResume()
         locationOverlay.enableMyLocation()
-        locationOverlay.enableFollowLocation()
         locationOverlay.runOnFirstFix {
             activity?.runOnUiThread {
                 if (isAdded) {

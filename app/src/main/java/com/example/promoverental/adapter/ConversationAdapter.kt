@@ -12,7 +12,8 @@ import com.example.promoverental.model.Conversation
 
 class ConversationAdapter(
     private var conversations: List<Conversation>,
-    private val onItemClick: (String) -> Unit
+    private val onItemClick: (String) -> Unit,
+    private val onItemLongClick: (Conversation) -> Unit
 ) : RecyclerView.Adapter<ConversationAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -51,6 +52,10 @@ class ConversationAdapter(
         }
         
         holder.itemView.setOnClickListener { onItemClick(otherUser.id) }
+        holder.itemView.setOnLongClickListener {
+            onItemLongClick(conv)
+            true
+        }
     }
 
     override fun getItemCount(): Int = conversations.size

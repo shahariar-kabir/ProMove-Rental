@@ -106,6 +106,12 @@ class HouseDetailsActivity : AppCompatActivity() {
             startMarker.title = it.title ?: "House"
             map.overlays.add(startMarker)
 
+            findViewById<View>(R.id.btnCenterHouse).setOnClickListener {
+                val p = GeoPoint(house?.latitude ?: 23.8103, house?.longitude ?: 90.4125)
+                map.controller.animateTo(p)
+                map.controller.setZoom(17.5)
+            }
+
             findViewById<View>(R.id.btnFullScreenMap).setOnClickListener {
                 val intent = Intent(this, FullScreenMapActivity::class.java)
                 intent.putExtra("mode", "view_single")

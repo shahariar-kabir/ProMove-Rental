@@ -3,14 +3,17 @@ package com.example.promoverental.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.RecyclerView
 import com.example.promoverental.R
 import com.example.promoverental.model.Message
-import com.example.promoverental.utils.SupabaseManager
-import io.github.jan.supabase.auth.auth
 
-class MessageAdapter(private val currentUserId: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MessageAdapter(
+    private val currentUserId: String,
+    private val onDeleteClick: (Message) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val messages = mutableListOf<Message>()
 
@@ -35,8 +38,8 @@ class MessageAdapter(private val currentUserId: String) : RecyclerView.Adapter<R
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val message = messages[position]
-        if (holder is SentViewHolder) holder.bind(message)
-        else if (holder is ReceivedViewHolder) holder.bind(message)
+        if (holder is SentViewHolder) holder.bind(message, onDeleteClick)
+        else if (holder is ReceivedViewHolder) holder.bind(message, onDeleteClick)
     }
 
     override fun getItemCount(): Int = messages.size
@@ -56,15 +59,41 @@ class MessageAdapter(private val currentUserId: String) : RecyclerView.Adapter<R
 
     class SentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val tvMessage = view.findViewById<TextView>(R.id.tvMessage)
-        fun bind(message: Message) {
+        private val btnMenu = view.findViewById<ImageButton>(R.id.btnMenu)
+        
+        fun bind(message: Message, onDeleteClick: (Message) -> Unit) {
             tvMessage.text = message.message
+            btnMenu.setOnClickListener { view ->
+                val popup = PopupMenu(view.context, view)
+                popup.menu.add("Delete")
+                popup.setOnMenuItemClickListener {
+                    if (it.title == "Delete") {
+                        onDeleteClick(message)
+                    }
+                    true
+                }
+                popup.show()
+            }
         }
     }
 
     class ReceivedViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val tvMessage = view.findViewById<TextView>(R.id.tvMessage)
-        fun bind(message: Message) {
+        private val btnMenu = view.findViewById<ImageButton>(R.id.btnMenu)
+
+        fun bind(message: Message, onDeleteClick: (Message) -> Unit) {
             tvMessage.text = message.message
+            btnMenu.setOnClickListener { view ->
+                val popup = PopupMenu(view.context, view)
+                popup.menu.add("Delete")
+                popup.setOnMenuItemClickListener {
+                    if (it.title == "Delete") {
+                        onDeleteClick(message)
+                    }
+                    true
+                }
+                popup.show()
+            }
         }
     }
 }
